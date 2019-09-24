@@ -1,5 +1,4 @@
 #include "arraysequence.hpp"
-#include "functions.hpp"
 
 template <typename T>
 ArraySequence<T>::ArraySequence() {
@@ -8,7 +7,7 @@ ArraySequence<T>::ArraySequence() {
 }
 
 template <typename T>
-ArraySequence<T>::ArraySequence(ArraySequence<T>* sequence) {
+ArraySequence<T>::ArraySequence(Sequence<T>* sequence) {
     Sequence<T>::length = sequence->getLength();
     data = (T*)malloc(sizeof(T) * Sequence<T>::length);
     for (int i = 0; i < Sequence<T>::length; i++) {
@@ -25,7 +24,7 @@ ArraySequence<T>::ArraySequence(int n, int leftLimit, int rightLimit) {
     data = (T*)malloc(sizeof(T) * n);
     Sequence<T>::length = n;
     for (int i = 0; i < n; i++) {
-        *(data + i) = randInt(leftLimit, rightLimit);
+        *(data + i) = rnd::randInt(leftLimit, rightLimit);
     }
 }
 
@@ -147,6 +146,15 @@ void ArraySequence<T>::remove(T item) {
         *(data + i) = *(data + i - 1);
     }
     data = (T*)realloc(data, sizeof(T) * Sequence<T>::length);
+}
+
+template <typename T>
+void ArraySequence<T>::replace(int index, T item) {
+    if (index >= Sequence<T>::length) {
+        exception_outOfRange e;
+        throw e;
+    }
+    *(data + index) = item;
 }
 
 template <typename T>

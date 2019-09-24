@@ -1,5 +1,4 @@
 #include "listsequence.hpp"
-#include "functions.hpp"
 
 template <typename T>
 ListSequence<T>::ListSequence() {
@@ -8,7 +7,7 @@ ListSequence<T>::ListSequence() {
 }
 
 template <typename T>
-ListSequence<T>::ListSequence(ListSequence<T>* sequence) {
+ListSequence<T>::ListSequence(Sequence<T>* sequence) {
     head = tail  = nullptr;
     Sequence<T>::length = 0;
     for (int i = 0; i < sequence->getLength(); i++) {
@@ -25,7 +24,7 @@ ListSequence<T>::ListSequence(int n, int leftLimit, int rightLimit) {
     head = tail  = nullptr;
     Sequence<T>::length = 0;
     for (int i = 0; i < n; i++) {
-        this->append(randInt(leftLimit, rightLimit));
+        this->append(rnd::randInt(leftLimit, rightLimit));
     }
 }
 
@@ -185,6 +184,28 @@ void ListSequence<T>::remove(T item) {
         delete tmp;
         Sequence<T>::length--;
     }
+}
+
+template <typename T>
+void ListSequence<T>::replace(int index, T item) {
+    if (index >= Sequence<T>::length) {
+        exception_outOfRange e;
+        throw e;
+    }
+    Node* tmp = nullptr;
+    if (index < Sequence<T>::length/2) {
+        tmp = head;
+        for (int i = 0; i < index; i++) {
+            tmp = tmp->next;
+        }
+    }
+    else {
+        tmp = tail;
+        for (int i = 0; i < Sequence<T>::length - index - 1; i++) {
+            tmp = tmp->prev;
+        }
+    }
+    tmp->data = item;
 }
 
 template <typename T>

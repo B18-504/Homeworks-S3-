@@ -9,9 +9,9 @@ private:
     T* data;
 public:
     ArraySequence(); //default constuctor
-    ArraySequence(ArraySequence<T>* sequence); //copying constuctor
+    ArraySequence(Sequence<T>* sequence); //copying constuctor
     ArraySequence(int n, int leftLimit, int rightLimit); //create sequence with n random int numbers in given selection
-    ArraySequence<T>& operator=(const ArraySequence<T>& sequence) {
+    ArraySequence<T>& operator=(const Sequence<T>& sequence) {
         free(this->data);
         this->data = nullptr;
         Sequence<T>::length = 0;
@@ -33,6 +33,7 @@ public:
     virtual void prepend(T item) override;
     virtual void insertAt(int index, T item) override;
     virtual void remove(T item) override;
+    virtual void replace(int index, T item) override;
 };
 
 #endif

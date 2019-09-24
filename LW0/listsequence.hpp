@@ -16,9 +16,9 @@ private:
     Node* tail;
 public:
     ListSequence(); //default constructor
-    ListSequence(ListSequence<T>* sequence); //copying constructor
+    ListSequence(Sequence<T>* sequence); //copying constructor
     ListSequence(int n, int leftLimit, int rightLimit); //create sequence with n random int numbers in given selection
-    ListSequence<T>& operator=(const ListSequence<T>& sequence) {
+    ListSequence<T>& operator=(const Sequence<T>& sequence) {
         Node *tmp = nullptr;
         while (tmp != nullptr) {
             Node *next = tmp->next;
@@ -46,6 +46,7 @@ public:
     virtual void prepend(T item) override;
     virtual void insertAt(int index, T item) override;
     virtual void remove(T item) override;
+    virtual void replace(int index, T item) override;
 };
 
 #endif
