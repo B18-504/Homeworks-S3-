@@ -23,17 +23,11 @@ struct HTable
 };
 
 
-void init(HTable &table)
-{
-	for(int i = 0; i < 256; i++)
-	{
-		table.table[i] = 0;
-	}
-}
+void init(HTable &table);
 
-void bind(HTable &table, void *ref, char *key, char *type, char &err)	//Êëþ÷ è èìÿ òèïà íå áîëåå 254 ñèìâîëîâ!
-{																		//1 - ñëèøêîì äëèííûé êëþ÷/èìÿ òèïà
-	err = 0;
+void bind(HTable &table, void *ref, char *key, char *type, char &err)	//ÐšÐ»ÑŽÑ‡ Ð¸ Ð¸Ð¼Ñ Ñ‚Ð¸Ð¿Ð° Ð½Ðµ Ð±Ð¾Ð»ÐµÐµ 254 ÑÐ¸Ð¼Ð²Ð¾Ð»Ð¾Ð²!
+{																		//1 - ÑÐ»Ð¸ÑˆÐºÐ¾Ð¼ Ð´Ð»Ð¸Ð½Ð½Ñ‹Ð¹ ÐºÐ»ÑŽÑ‡/Ð¸Ð¼Ñ Ñ‚Ð¸Ð¿Ð°
+	err = 0;															//2 - ÐºÐ»ÑŽÑ‡ Ð·Ð°Ð½ÑÑ‚
 	char *p = key;
 	unsigned char i = 0;
 	while((*p)*(!err))
@@ -62,6 +56,12 @@ void bind(HTable &table, void *ref, char *key, char *type, char &err)	//Êëþ÷ è è
 		binding *c = table.table[n], *last = 0;
 		while(c)
 		{
+			cmp(key, c->key, *(bool*)&err);
+			if(err)
+			{
+				err = 2;
+				return;
+			}
 			last = c;
 			c = c->next;
 		}
@@ -82,8 +82,15 @@ void bind(HTable &table, void *ref, char *key, char *type, char &err)	//Êëþ÷ è è
 	}
 }
 
-binding *find(HTable &table, char *key, char &err)						//1 - ñëèøêîì äëèííûé êëþ÷
-{																		//2 - êëþ÷ íå íàéäåí
+void bindt(HTable &table, char *name, unsigned int size, char &err)		//1 - ÑÐ»Ð¸ÑˆÐºÐ¾Ð¼ Ð´Ð»Ð¸Ð½Ð¾Ðµ Ð¸Ð¼Ñ Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ñ‚Ð¸Ð¿Ð°
+{																		//2 - ÐºÐ»ÑŽÑ‡ Ð·Ð°Ð½ÑÑ‚
+	unsigned int *a = (unsigned int*)malloc(sizeof(unsigned int));
+	*a = size;
+	bind(table, a, name, "t", err);
+}
+
+void find(HTable &table, binding *&ptr, char *key, char &err)			//1 - ÑÐ»Ð¸ÑˆÐºÐ¾Ð¼ Ð´Ð»Ð¸Ð½Ð½Ñ‹Ð¹ ÐºÐ»ÑŽÑ‡
+{																		//2 - ÐºÐ»ÑŽÑ‡ Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½
 	err = 0;
 	char *p = key;
 	unsigned int i = 0;
@@ -101,17 +108,18 @@ binding *find(HTable &table, char *key, char &err)						//1 - ñëèøêîì äëèííûé êë
 		err = 2;
 		bool b;
 		unsigned int h = hash(key);
-		binding *c = table.table[h];
-		while((bool(c))*(bool(err)))
+		ptr = table.table[h];
+		while((bool(ptr))*(bool(err)))
 		{
-			cmp(key, c->key, b);
+			cmp(key, ptr->key, b);
 			if(b)
 			{
 				err = 0;
-				return c;
+				return;
 			}
-			c = c->next;
+			ptr = ptr->next;
 		}
 	}
-	return 0;
+	ptr = 0;
+	return;
 }
