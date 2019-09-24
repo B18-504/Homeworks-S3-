@@ -69,10 +69,10 @@ public:
 		}
 		else
 		{
-			Node* temp; //счетчик мест
-			Node* temp1 = (Node*)malloc(sizeof(Node)); // память под новый элемент
+			Node* temp; //pointer used for place counter
+			Node* temp1 = (Node*)malloc(sizeof(Node)); // memory for new element
 			temp = head;
-			for (int i = 1; i < index - 1; i++)
+			for (int i = 0; i < index - 1; i++)
 				temp = temp->next;
 			temp1->next = temp->next;
 			temp1->data = item;
@@ -82,12 +82,17 @@ public:
 	}
 	void Show()
 	{
-		Node* temp = head;
-		int i = this->length;
-		while (i-- != 0) 
+		if (this->length == 0)
+			std::cout << "Empty list" << endl;
+		else
 		{
-			std::cout << temp->data << " ";
-			temp = temp->next;
+			Node* temp = head;
+			int i = this->length;
+			while (i-- != 0)
+			{
+				std::cout << temp->data << " ";
+				temp = temp->next;
+			}
 		}
 	}
 	ListSequence<T>* GetSubSequence(int startIndex, int endIndex)
@@ -109,7 +114,7 @@ public:
 	}
 	void Remove(T item)
 	{
-		int i = 1, j = 1;
+		int i = 0, j = 0;
 		Node* temp = head;
 		while (j < this->length)
 		{
@@ -117,13 +122,21 @@ public:
 				if (Get(i) == item)
 					break;
 			j = i;
-			if (i != this->length--)
+			if (i == 0)
 			{
-				for (i; i > 2; i--)
-					temp = temp->next;
-				temp->next = temp->next->next;
+				head = head->next;
+				this->length--;
 			}
-			i = ++j;
+			else
+			{
+				if (i < this->length--)
+				{
+					for (i; i > 0; i--)
+						temp = temp->next;
+					temp->next = temp->next->next;
+				}
+			}
+			i = j;
 		}
 	}
 };

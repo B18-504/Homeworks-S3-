@@ -34,6 +34,7 @@ public:
 	virtual void Prepend(T item) = 0;
 	virtual void InsertAt(int index, T item) = 0;
 	virtual void Remove(T item) = 0;
+	virtual void Show() = 0;
 };
 
 

@@ -39,13 +39,18 @@ public:
 		if (index > this->length)
 			throw("Out of array size");
 		for (int i = this->length; i > index - 1; i--)
-			array[i] = array[i - 1];
-		array[index - 1] = item;
+			array[i + 1] = array[i];
+		array[index] = item;
 	}
 	void Show()
 	{
-		for (int i = 0; i < this->length; i++)
-			std::cout << array[i] << " ";
+		if (this->length == 0)
+			std::cout << "Empty array" << endl;
+		else
+		{
+			for (int i = 0; i < this->length; i++)
+				std::cout << array[i] << " ";
+		}
 	}
 	ArraySequence<T>* GetSubSequence(int startIndex, int endIndex)
 	{
@@ -61,20 +66,20 @@ public:
 	}
 	void Remove(T item)
 	{
-		int i = 1, j = 0;
+		int i = 0, j = 0;
 		while (j < this->length)
 		{
 			for (i; i < this->length; i++)
 				if (Get(i) == item)
 					break;
 			j = i;
-			 if (i < this->length)
+			if (i < this->length)
 			{
 				for (i; i < this->length; i++)
-					array[i - 1] = array[i];
+					array[i] = array[i + 1];
 				this->length--;
 			}
-			i = ++j;
+			i = j;
 		}
 	}
 };
