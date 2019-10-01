@@ -19,6 +19,7 @@ public:
 	virtual void Append(T value) = 0;
 	virtual void Prepend(T value) = 0;
 	virtual void Insert(T value, uint index) = 0;
+	virtual void Remove(T value) = 0;
 };
 
 #include "Sequence.cpp"

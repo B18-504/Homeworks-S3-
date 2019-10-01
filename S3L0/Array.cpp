@@ -75,7 +75,7 @@ void Array<T>::Append(T value)
 	{
 		extend();
 	}
-	body[(Sequence<T>::len++)] = value;
+	body[(Sequence<T>::len++)] = value->Clone();
 }
 
 template <typename T>
@@ -92,13 +92,17 @@ void Array<T>::Prepend(T value)
 	{
 		body[i] = body[i-1];
 	}
-	body[0] = value;
+	body[0] = value->Clone();
 	++Sequence<T>::len;
 }
 
 template <typename T>
-void Array<T>::Insert(T value, unsigned int index)
+void Array<T>::Insert(T value, uint index)
 {
+	if(index > Sequence<T>::len)
+	{
+		throw(OoR());
+	}
 	ulint l = Sequence<T>::len;
 	++l;
 	l *= sizeof(T);
@@ -111,6 +115,51 @@ void Array<T>::Insert(T value, unsigned int index)
 	{
 		body[i] = body[i - 1];
 	}
-	body[i] = value;
+	body[i] = value->Clone();
 	++Sequence<T>::len;
+}
+
+template <typename T>
+void Array<T>::Remove(T value)
+{
+	uint i = 0;
+	bool found = 0;
+	while((i < Sequence<T>::len)*(!found))
+	{
+		if(*(body[i]) == *value)
+		{
+			found = 1;
+		}
+		else
+		{
+			++i;
+		}
+	}
+	if(found)
+	{
+		++i;
+		for(i; i < Sequence<T>::len; i++)
+		{
+			body[i-1] = body[i];
+		}
+		--Sequence<T>::len;
+	}
+}
+
+template <typename T>
+Sequence<T> *(Array<T>::GetSubS)(uint start, uint end)
+{
+	if(end < Sequence<T>::len)
+	{
+		Array<T> *result = new Array<T>;
+		for(uint i = start; i <= end; i++)
+		{
+			result->Append(body[i]);
+		}
+		return result;
+	}
+	else
+	{
+		throw(OoR());
+	}
 }

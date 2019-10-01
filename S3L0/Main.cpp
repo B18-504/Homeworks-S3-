@@ -1,12 +1,14 @@
-#define FLUSH fseek(stdin, 0, SEEK_END)
+#define FLUSH while(getchar() != '\n')
 
 #include "stdlib.h"
 #include "stdio.h"
+#include <typeinfo>
 
 #include "Exceptions.h"
 
 #include "CmdMgr/CmdMgr.h"
 
+#include "Number.h"
 #include "Sequence.h"
 #include "IO.cpp"
 #include "CmdBinds.cpp"

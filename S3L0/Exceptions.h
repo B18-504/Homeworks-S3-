@@ -76,8 +76,19 @@ public:
 	}
 };
 
+class Invalid_Implementation_Subclass : public Exception
+{
+public:
+	Invalid_Implementation_Subclass()
+	{
+		Exception::code = 0x15;
+		Exception::message = "Polymorphyc argument is of wrong sublcass";
+	}
+};
+
 typedef Max_Size_Reached MSR;
 typedef Mem_Alloc_Error MAE;
 typedef Out_Of_Range OoR;
 typedef Container_Is_Empty CIE;
 typedef Invalid_Type_Name ITN;
+typedef Invalid_Implementation_Subclass IIS;

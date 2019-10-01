@@ -1,6 +1,6 @@
 void getcmd(HTable &table, bool &finish)
 {
-	printf("-->");														//Да, у меня опухло ЧСВ
+	printf("--> ");
 	
 	char **p;
 	unsigned char argc;
@@ -11,12 +11,12 @@ void getcmd(HTable &table, bool &finish)
 	
 	if(err == 1)
 	{
-		printf("слишком длинное слово\n");
+		printf("too long word\n");
 		return;
 	}
 	else if(err == 2)
 	{
-		printf("слишком много слов\n");
+		printf("too much words\n");
 		return;
 	}
 	
@@ -34,7 +34,7 @@ void getcmd(HTable &table, bool &finish)
 		find(table, function, *p, err);
 		if(err)
 		{
-			printf("не найдена функция \"%s\"\n", *p);
+			printf("function \"%s\" not found\n", *p);
 			return;
 		}		
 		bool b;
@@ -44,7 +44,7 @@ void getcmd(HTable &table, bool &finish)
 			cmp(function->type, "ft", b);
 			if(!b)
 			{
-				printf("не найдена функция \"%s\"\n", *p);
+				printf("function \"%s\" not found\n", *p);
 				return;
 			}
 			else
@@ -104,8 +104,8 @@ void getcmd(HTable &table, bool &finish)
 			++p;
 			--argc;
 			binding *c;
-			void **argv = (void**)malloc(argc*sizeof(void*));
-			void **a = argv;
+			void ***argv = (void***)malloc(argc*sizeof(void**));
+			void ***a = argv;
 			char **types = (char**)malloc((argc+1)*sizeof(char*));
 			char **t = types;
 			char err;
@@ -114,12 +114,13 @@ void getcmd(HTable &table, bool &finish)
 				find(table, c, *p, err);
 				if(err)
 				{
-					copy(*(char**)a, *p, err);
+					*a = (void**)malloc(sizeof(void*));
+					copy(**(char***)(a), *p, err);
 					copy(*t, "input", err);								//Тип input предполагается для передачи параметров команд
 				}
 				else
 				{
-					*a = c->ptr;
+					*a = &(c->ptr);
 					copy(*t, c->type, err);
 				}
 				++p;
@@ -128,7 +129,7 @@ void getcmd(HTable &table, bool &finish)
 			}
 			*t = 0;
 			
-			void (*f)(void**);
+			void (*f)(void***);
 			
 			find(*(Overrides*)(function->ptr), f, types, err);
 			if(!err)
