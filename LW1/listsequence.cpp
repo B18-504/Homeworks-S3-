@@ -209,19 +209,6 @@ void ListSequence<T>::replace(int index, T item) {
 }
 
 template <typename T>
-void ListSequence<T>::clear() {
-    Node *tmp = nullptr;
-    while (tmp != nullptr) {
-        Node *next = tmp->next;
-        delete tmp;
-        tmp = next;
-    }
-    head = nullptr;
-    tail = nullptr;
-    Sequence<T>::length = 0;
-}
-
-template <typename T>
 ListSequence<T>::~ListSequence() {
     Node *tmp = nullptr;
     while (tmp != nullptr) {

@@ -75,12 +75,12 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>0</x>
       <y>350</y>
-      <width>421</width>
-      <height>41</height>
+      <width>211</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="text">
-     <string>Show comparing chart</string>
+     <string>Show comparing bar chart</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_4">
@@ -216,6 +216,32 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>About</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_6">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>10</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Write output</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_7">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>350</y>
+      <width>211</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Show comparing line chart</string>
     </property>
    </widget>
   </widget>

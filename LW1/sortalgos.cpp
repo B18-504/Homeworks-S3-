@@ -3,6 +3,14 @@
 template <typename T>
 template <typename C>
 void Sort<T>::mergeSort(Sequence<T>* seq, int start, int end, C cmp) {
+    if (start > end) {
+        exception_incorrectSelection e;
+        throw e;
+    }
+    if ((end >= seq->getLength()) || (start < 0)) {
+        exception_outOfRange e;
+        throw e;
+    }
     if (start < end) {
         int middle = (start + end) / 2;
         mergeSort(seq, start, middle, cmp);
@@ -54,6 +62,14 @@ void Sort<T>::merge(Sequence<T>* seq, int start, int middle, int end, C cmp) {
 template <typename T>
 template <typename C>
 void Sort<T>::quickSort(Sequence<T>* seq, int start, int end, C cmp) {
+    if (start > end) {
+        exception_incorrectSelection e;
+        throw e;
+    }
+    if ((end >= seq->getLength()) || (start < 0)) {
+        exception_outOfRange e;
+        throw e;
+    }
     int i = start;
     int j = end;
     T pivot = seq->get((i + j) / 2);
@@ -84,9 +100,17 @@ void Sort<T>::quickSort(Sequence<T>* seq, int start, int end, C cmp) {
 template <typename T>
 template <typename C>
 void Sort<T>::bubbleSort(Sequence<T>* seq, int start, int end, C cmp) {
-    for (int i = start; i < end; i++) {
-        for (int j = start; j < end - i; j++) {
-            if (cmp(seq->get(j), seq->get(j + 1))) {
+    if (start > end) {
+        exception_incorrectSelection e;
+        throw e;
+    }
+    if ((end >= seq->getLength()) || (start < 0)) {
+        exception_outOfRange e;
+        throw e;
+    }
+    for (int i = 0; i < end; i++) {
+        for (int j = 0; j < end - i; j++) {
+            if (cmp(seq->get(j + 1), seq->get(j))) {
                 T tmp = seq->get(j);
                 seq->replace(j, seq->get(j + 1));
                 seq->replace(j + 1, tmp);

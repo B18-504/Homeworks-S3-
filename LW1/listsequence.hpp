@@ -47,7 +47,6 @@ public:
     virtual void insertAt(int index, T item) override;
     virtual void remove(T item) override;
     virtual void replace(int index, T item) override;
-    virtual void clear() override;
 };
 
 #endif

@@ -158,13 +158,6 @@ void ArraySequence<T>::replace(int index, T item) {
 }
 
 template <typename T>
-void ArraySequence<T>::clear() {
-    free(data);
-    data = nullptr;
-    Sequence<T>::length = 0;
-}
-
-template <typename T>
 ArraySequence<T>::~ArraySequence() {
     free(data);
     data = nullptr;

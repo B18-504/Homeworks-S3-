@@ -40,7 +40,7 @@ FORMS += \
     aboutwindow.ui \
     mainwindow.ui
 
-ICON = myicon.icns
+ICON = myIcon.icns
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -49,3 +49,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     myicon.icns
+
+OTHER_FILES += \
+    output.txt

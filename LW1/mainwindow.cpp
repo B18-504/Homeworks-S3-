@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <fstream>
+#include <QDebug>
 
 using namespace QtCharts;
 
@@ -21,8 +23,8 @@ void MainWindow::on_pushButton_2_clicked()
 {
     int length = ui->length->text().toInt();
     ui->length->clear();
-    if (!length) {
-        QMessageBox::warning(this, "Warning", "Length can't be 0\nChange input");
+    if (!length || (length <= 0)) {
+        QMessageBox::warning(this, "Warning", "Incorrect length\nChange input");
         return;
     }
     type = ui->comboBox->currentText();
@@ -44,6 +46,10 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
+    if (!((seqA1 && seqA2) || (seqL1 && seqL2))) {
+        QMessageBox::warning(this, "Warning", "You have to create sequences first");
+        return;
+    }
     if (time == .0) {
         QMessageBox::warning(this, "Warning", "Sequences are not sorted");
         return;
@@ -81,7 +87,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     if (!((seqA1 && seqA2) || (seqL1 && seqL2))) {
-        QMessageBox::warning(this, "Warning", "You have to create Sequences\nTry first block");
+        QMessageBox::warning(this, "Warning", "You have to create sequences first\nTry first block");
         return;
     }
     if (time != .0) {
@@ -164,4 +170,104 @@ void MainWindow::on_pushButton_5_clicked()
     AboutWindow *window = new AboutWindow;
     window->setModal(true);
     window->exec();
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    if (!((seqA1 && seqA2) || (seqL1 && seqL2))) {
+        QMessageBox::warning(this, "Warning", "You have to create Sequences\nTry first block");
+        return;
+    }
+    std::ofstream out("/Users/levmarder/Documents/Coding/LW1/output.txt");
+    if (!out.is_open()) {
+        qDebug() << "Bruh not really";
+    }
+    if (seqA1) {
+        for (int i = 0; i < seqA1->getLength(); i++) {
+            out << seqA1->get(i) << " ";
+        }
+    }
+    else if (seqL1) {
+        for (int i = 0; i < seqL1->getLength(); i++) {
+            out << seqL1->get(i) << " ";
+        }
+    }
+    out << std::endl;
+    out.close();
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    if (!((seqA1 && seqA2) || (seqL1 && seqL2))) {
+        QMessageBox::warning(this, "Warning", "You have to create sequences first");
+        return;
+    }
+    if (time == .0) {
+        QMessageBox::warning(this, "Warning", "Sequences are not sorted");
+        return;
+    }
+
+    ArraySequence<double> *times1 = new ArraySequence<double>;
+    ArraySequence<double> *times2 = new ArraySequence<double>;
+    ArraySequence<double> *ns = new ArraySequence<double>;
+    double b = time1 * 0.01;
+    double n = .0;
+    int length = 0;
+    if (seqA1) length = seqA1->getLength();
+    else if (seqL1) length = seqL1->getLength();
+    while (b < time1) {
+        times1->append(b);
+        b += time1 * 0.01;
+    }
+    b = time2 * 0.01;
+    while (b < time2) {
+        times2->append(b);
+        b += time2 * 0.01;
+    }
+    n = length * 0.01;
+    while (n < length) {
+        ns->append(n);
+        n += length * 0.01;
+    }
+
+    qDebug() << times1->getLength() << times2->getLength() << ns->getLength();
+
+    QLineSeries *series1 = new QLineSeries;
+    for (int i = 0; i < 99; i++) {
+        series1->append(ns->get(i), times1->get(i));
+    }
+    series1->setName("Algorightm 1");
+
+    QLineSeries *series2 = new QLineSeries;
+    for (int i = 0; i < 99; i++) {
+        series2->append(ns->get(i), times2->get(i));
+    }
+    series2->setName("Algorithm 2");
+
+    QChart *chart = new QChart;
+    chart->addSeries(series1);
+    chart->addSeries(series2);
+    chart->setTitle("Algorithms Comparison");
+    chart->setAnimationOptions(QChart::SeriesAnimations);
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setRange(0, time);
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series1->attachAxis(axisY);
+    series2->attachAxis(axisY);
+
+    QValueAxis *axisX = new QValueAxis();
+    axisX->setRange(0, length);
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series1->attachAxis(axisX);
+    series2->attachAxis(axisX);
+
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    QWidget *widget = new QWidget;
+    widget = chartView;
+    widget->resize(600, 500);
+    widget->show();
+
 }

@@ -21,7 +21,6 @@ public:
     virtual void insertAt(int index, T item) = 0; //insert item at a specific point
     virtual void remove(T item) = 0; //remove specific item
     virtual void replace(int index, T item) = 0; //replace an item
-    virtual void clear() = 0; //clear a sequence
 };
 
 #endif
