@@ -10,7 +10,8 @@
 
 #include "Number.h"
 #include "Sequence.h"
-#include "IO.cpp"
+//#include "IO.cpp"														//Обёртки ввода-вывода не реализованы
+#include "Test.cpp"
 #include "CmdBinds.cpp"
 
 using namespace std;
