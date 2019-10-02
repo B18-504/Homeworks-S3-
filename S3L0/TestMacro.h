@@ -17,5 +17,5 @@ void tell(Result &r)
 	}
 }
 
-#define REQUIRE(equation, result) ++result.total; try{result.passed += (equation);} catch(Exception E){}
-#define REQUIRE_EXCEPTION(call, exc_code, result) ++result.total; try{call;} catch(Exception E){result.passed += (E.code == exc_code);}
+#define REQUIRE(equation, result) result.total += 1; try{result.passed += (equation);} catch(Exception E){}
+#define REQUIRE_EXCEPTION(call, exc_code, result) result.total += 1; try{call;} catch(Exception E){result.passed += (E.code == exc_code);}

@@ -46,10 +46,10 @@ public:
 	}
 };
 
-class Out_Of_Range : public Exception
+class Out_of_Range : public Exception
 {
 public:
-	Out_Of_Range()
+	Out_of_Range()
 	{
 		Exception::code = 0x12;
 		Exception::message = "Index is out of range";
@@ -88,7 +88,7 @@ public:
 
 typedef Max_Size_Reached MSR;
 typedef Mem_Alloc_Error MAE;
-typedef Out_Of_Range OoR;
+typedef Out_of_Range OoR;
 typedef Container_Is_Empty CIE;
 typedef Invalid_Type_Name ITN;
 typedef Invalid_Implementation_Subclass IIS;

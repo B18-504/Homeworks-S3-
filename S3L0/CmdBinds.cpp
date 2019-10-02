@@ -113,6 +113,11 @@ void GetSubS(void ***argv)
 	}
 }
 
+void bTest1(void ***)
+{
+	Test1();
+}
+
 void binds(HTable &table)
 {
 	char err;
@@ -128,6 +133,10 @@ void binds(HTable &table)
 	bindit(table, "list", "sequence", generateList, err);
 	
 	char **types;
+	set(types, 0, err);
+	
+	bindf(table, bTest1, "test1", types, err);
+	
 	set(types, 1, err);
 	
 	copy(types[0], "number", err);
