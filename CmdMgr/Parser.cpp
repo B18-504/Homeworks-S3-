@@ -1,4 +1,4 @@
-#define FLUSH fseek(stdin, 0, SEEK_END)
+#pragma once
 
 struct word
 {
@@ -25,7 +25,6 @@ void wipe(wordlist &a)
 	}
 	a.first = 0;
 	a.l = 0;
-	return;
 }
 
 void input(word &a, char &flag)											//0 - успешный ввод слова
@@ -60,7 +59,6 @@ void input(word &a, char &flag)											//0 - успешный ввод сло
 			buff = getchar();
 		}
 	}
-	return;
 }
 
 void input(wordlist &a, char &err)										//1 - слишком длинное слово
@@ -97,9 +95,7 @@ void input(wordlist &a, char &err)										//1 - слишком длинное 
 	{
 		wipe(a);
 	}
-	FLUSH;
-	--err;
-	return;
+	--err;;
 }
 
 void copy(char **&target, wordlist &source, char &err)
@@ -115,7 +111,6 @@ void copy(char **&target, wordlist &source, char &err)
 		++cptr;
 		wptr = wptr->next;
 	}
-	return;
 }
 
 void input(char **&p, unsigned char &length, char &err)					//1 - слишком длинное слово
@@ -128,5 +123,8 @@ void input(char **&p, unsigned char &length, char &err)					//1 - слишком
 		copy(p, a, err);
 	};
 	wipe(a);
-	return;
 }
+
+//void finput(char **&p, unsigned char &length, char &err)
+//{
+//}

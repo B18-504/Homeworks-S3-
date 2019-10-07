@@ -1,3 +1,5 @@
+#pragma once
+
 #include "malloc.h"
 
 #include "Str.cpp"

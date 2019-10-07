@@ -1,3 +1,5 @@
+#pragma once
+
 struct Override 
 {
 	Override *next;
@@ -10,7 +12,7 @@ struct Overrides
 	Override *head;
 };
 
-void find(Overrides &o, void (*&function)(void**), char **types, char &err)	//1 - нет нужной перегрузки
+void find(Overrides &o, void (*&function)(void***), char **types, char &err)	//1 - нет нужной перегрузки
 {
 	Override *ov = o.head, *op;
 	err = 1;
@@ -35,7 +37,7 @@ void find(Overrides &o, void (*&function)(void**), char **types, char &err)	//1 
 
 void bindf(HTable &table, void *function, char *key, char **types, char &err)	//1 - слишком длинное имя/типы
 {																		//2 - имя занято переменной или внутренней функцией (пока что нельзя перегружать внутренние обычными)
-	binding *pb;
+	binding *pb;														//3 - перегрузка с данными типами уже существует
 	find(table, pb, key, err);
 	bool b;
 	Override *po;
@@ -63,9 +65,15 @@ void bindf(HTable &table, void *function, char *key, char **types, char &err)	//
 			return;
 		}
 	}
-	while(po->next)														
+	while((bool(po->next))*(!err))														
 	{
 		po = po->next;
+		cmp(po->types, types, b);
+		if(b)
+		{
+			err = 3;
+			return;
+		}
 	}
 	po->next = (Override*)malloc(sizeof(Override));
 	po = po->next;

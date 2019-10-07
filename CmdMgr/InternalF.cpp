@@ -1,3 +1,5 @@
+#pragma once
+
 void create(binding **&argv, unsigned char argc)
 {
 	char err;
@@ -15,6 +17,26 @@ void create(binding **&argv, unsigned char argc)
 				{
 					printf("Облажались, переменная не создана!\n");
 				}
+			}
+		}
+		else
+		{
+			cmp((*(argv+1))->type, "it", b);
+			if(b)
+			{
+				cmp((*(argv+2))->type, "input", b);
+				if(b)
+				{
+					bind(*(HTable*)((*argv)->ptr), ((itdata*)((*(argv+1))->ptr))->generator(), (*(argv+2))->ptr, ((itdata*)((*(argv+1))->ptr))->vtname, err);
+					if(err)
+					{
+						printf("Облажались, переменная не создана!\n");
+					}
+				}
+			}
+			else
+			{
+				throw(ITN());
 			}
 		}
 	}

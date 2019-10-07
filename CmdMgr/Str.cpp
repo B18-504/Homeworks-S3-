@@ -1,3 +1,5 @@
+#pragma once
+
 void copy(char *&target, char *source, char &err)						//нуль-терминатор не позже чем по индексу 254!
 {																		//1 - слишком длинная исходная строка
 	err = 0;
