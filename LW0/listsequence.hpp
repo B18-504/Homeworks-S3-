@@ -15,9 +15,9 @@ private:
     Node* head;
     Node* tail;
 public:
-    ListSequence(); //default constructor
-    ListSequence(ISequence<T>* sequence); //copying constructor
-    ListSequence(int n, int leftLimit, int rightLimit); //create sequence with n random int numbers in given selection
+    ListSequence();
+    ListSequence(ISequence<T>* sequence);
+    ListSequence(int n, int leftLimit, int rightLimit);
     ListSequence<T>& operator=(const ListSequence<T>& sequence);
     ~ListSequence(); 
 public:
