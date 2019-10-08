@@ -5,7 +5,7 @@
 #include "functions.hpp"
 
 template <typename T>
-class Sequence {
+class ISequence {
 protected:
     int length; //length of sequence
 public:
@@ -15,7 +15,7 @@ public:
     virtual T get(int index) const = 0; //get item based on index
     virtual T getFirst() const = 0; //get first item
     virtual T getLast() const = 0; //get last item
-    virtual Sequence<T>* getSubSequence(int startIndex, int endIndex) const = 0;
+    virtual ISequence<T>* getSubSequence(int startIndex, int endIndex) const = 0;
     virtual void append(T item) = 0; //add item to the end
     virtual void prepend(T item) = 0; //add item to the beginning
     virtual void insertAt(int index, T item) = 0; //insert item at a specific point

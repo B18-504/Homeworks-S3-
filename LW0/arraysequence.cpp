@@ -2,15 +2,15 @@
 
 template <typename T>
 ArraySequence<T>::ArraySequence() {
-    Sequence<T>::length = 0;
+    ISequence<T>::length = 0;
     data = nullptr;
 }
 
 template <typename T>
-ArraySequence<T>::ArraySequence(Sequence<T>* sequence) {
-    Sequence<T>::length = sequence->getLength();
-    data = (T*)malloc(sizeof(T) * Sequence<T>::length);
-    for (int i = 0; i < Sequence<T>::length; i++) {
+ArraySequence<T>::ArraySequence(ISequence<T>* sequence) {
+    ISequence<T>::length = sequence->getLength();
+    data = (T*)malloc(sizeof(T) * ISequence<T>::length);
+    for (int i = 0; i < ISequence<T>::length; i++) {
         *(data + i) = sequence->get(i);
     }
 }
@@ -22,20 +22,31 @@ ArraySequence<T>::ArraySequence(int n, int leftLimit, int rightLimit) {
         throw e;
     }
     data = (T*)malloc(sizeof(T) * n);
-    Sequence<T>::length = n;
+    ISequence<T>::length = n;
     for (int i = 0; i < n; i++) {
         *(data + i) = rnd::randInt(leftLimit, rightLimit);
     }
 }
 
 template <typename T>
+ArraySequence<T>& ArraySequence<T>::operator=(const ArraySequence<T>& sequence) {
+    free(this->data);
+    this->data = nullptr;
+    ISequence<T>::length = 0;
+    for (int i = 0; i < sequence.getLength(); i++) {
+        this->append(sequence.get(i));
+    }
+    return *this;
+}
+
+template <typename T>
 int ArraySequence<T>::getLength() const {
-    return Sequence<T>::length;
+    return ISequence<T>::length;
 }
 
 template <typename T>
 bool ArraySequence<T>::getIsEmpty() const {
-    if (!Sequence<T>::length) {
+    if (!ISequence<T>::length) {
         return true;
     }
     return false;
@@ -43,7 +54,7 @@ bool ArraySequence<T>::getIsEmpty() const {
 
 template <typename T>
 T ArraySequence<T>::get(int index) const {
-    if ((index >= Sequence<T>::length) || (index < 0)) {
+    if ((index >= ISequence<T>::length) || (index < 0)) {
         exception_outOfRange e;
         throw e;
     }
@@ -52,7 +63,7 @@ T ArraySequence<T>::get(int index) const {
 
 template <typename T>
 T ArraySequence<T>::getFirst() const {
-    if (!Sequence<T>::length) {
+    if (!ISequence<T>::length) {
         exception_sequenceIsEmpty e;
         throw e;
     }
@@ -61,11 +72,11 @@ T ArraySequence<T>::getFirst() const {
 
 template <typename T>
 T ArraySequence<T>::getLast() const {
-    if (!Sequence<T>::length) {
+    if (!ISequence<T>::length) {
         exception_sequenceIsEmpty e;
         throw e;
     }
-    return *(data + Sequence<T>::length - 1);
+    return *(data + ISequence<T>::length - 1);
 }
 
 template <typename T>
@@ -74,7 +85,7 @@ ArraySequence<T>* ArraySequence<T>::getSubSequence(int startIndex, int endIndex)
         exception_incorrectSelection e;
         throw e;
     }
-    if (endIndex >= Sequence<T>::length) {
+    if (endIndex >= ISequence<T>::length) {
         exception_outOfRange e;
         throw e;
     }
@@ -87,25 +98,25 @@ ArraySequence<T>* ArraySequence<T>::getSubSequence(int startIndex, int endIndex)
 
 template <typename T>
 void ArraySequence<T>::append(T item) {
-    Sequence<T>::length++;
-    if (!(Sequence<T>::length - 1)) {
+    ISequence<T>::length++;
+    if (!(ISequence<T>::length - 1)) {
         data = (T*)malloc(sizeof(T));
     }
     else {
-        data = (T*)realloc(data, sizeof(T) * Sequence<T>::length);
+        data = (T*)realloc(data, sizeof(T) * ISequence<T>::length);
     }
-    *(data + Sequence<T>::length - 1) = item;
+    *(data + ISequence<T>::length - 1) = item;
 }
 
 template <typename T>
 void ArraySequence<T>::prepend(T item) {
-    Sequence<T>::length++;
-    if (!(Sequence<T>::length - 1)) {
+    ISequence<T>::length++;
+    if (!(ISequence<T>::length - 1)) {
         data = (T*)malloc(sizeof(T));
     }
     else {
-        data = (T*)realloc(data, sizeof(T) * Sequence<T>::length);
-        for (int i = Sequence<T>::length - 1; i > 0; i--) {
+        data = (T*)realloc(data, sizeof(T) * ISequence<T>::length);
+        for (int i = ISequence<T>::length - 1; i > 0; i--) {
             *(data + i) = *(data + i - 1);
         }
     }
@@ -114,18 +125,18 @@ void ArraySequence<T>::prepend(T item) {
 
 template <typename T>
 void ArraySequence<T>::insertAt(int index, T item) {
-    if (index > Sequence<T>::length) {
+    if (index > ISequence<T>::length) {
         exception_outOfRange e;
         throw e;
     }
-    Sequence<T>::length++;
-    if (!(Sequence<T>::length - 1)) {
+    ISequence<T>::length++;
+    if (!(ISequence<T>::length - 1)) {
         data = (T*)malloc(sizeof(T));
         *(data) = item;
     }
     else {
-        data = (T*)realloc(data, sizeof(T) * Sequence<T>::length);
-        for (int i = Sequence<T>::length - 1; i > index; i--) {
+        data = (T*)realloc(data, sizeof(T) * ISequence<T>::length);
+        for (int i = ISequence<T>::length - 1; i > index; i--) {
             *(data + i) = *(data + i - 1);
         }
         *(data + index) = item;
@@ -135,22 +146,22 @@ void ArraySequence<T>::insertAt(int index, T item) {
 template <typename T>
 void ArraySequence<T>::remove(T item) {
     int index = -1;
-    for (int i = 0; i < Sequence<T>::length; i++) {
+    for (int i = 0; i < ISequence<T>::length; i++) {
         if (*(data + i) == item) {
             index = i;
             break;
         }
     }
-    Sequence<T>::length--;
-    for (int i = index; i < Sequence<T>::length; i++) {
+    ISequence<T>::length--;
+    for (int i = index; i < ISequence<T>::length; i++) {
         *(data + i) = *(data + i - 1);
     }
-    data = (T*)realloc(data, sizeof(T) * Sequence<T>::length);
+    data = (T*)realloc(data, sizeof(T) * ISequence<T>::length);
 }
 
 template <typename T>
 void ArraySequence<T>::replace(int index, T item) {
-    if (index >= Sequence<T>::length) {
+    if (index >= ISequence<T>::length) {
         exception_outOfRange e;
         throw e;
     }
@@ -161,5 +172,132 @@ template <typename T>
 ArraySequence<T>::~ArraySequence() {
     free(data);
     data = nullptr;
-    Sequence<T>::length = 0;
+    ISequence<T>::length = 0;
+}
+
+//ITERATOR METHODS//
+
+template <typename T>
+ArraySequence<T>::MyIterator::MyIterator(T* pos): pos(pos) {}
+
+template <typename T>
+ArraySequence<T>::MyIterator::MyIterator(const MyIterator& it): pos(it.pos) {}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator::reference ArraySequence<T>::MyIterator::operator*() const {
+    return *pos;
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator::pointer ArraySequence<T>::MyIterator::operator->() const {
+    return pos;
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator::reference ArraySequence<T>::MyIterator::operator[](const typename MyIterator::difference_type& n) const {
+    return *(pos)[n];
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator::difference_type ArraySequence<T>::MyIterator::operator-(const ArraySequence<T>::MyIterator& it) const {
+    return pos - it.pos;
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator ArraySequence<T>::MyIterator::MyIterator::operator++(int) {
+    return MyIterator(pos++);
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator& ArraySequence<T>::MyIterator::MyIterator::operator++() {
+    ++pos;
+    return *this;
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator ArraySequence<T>::MyIterator::MyIterator::operator--(int) {
+    return MyIterator(pos--);
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator& ArraySequence<T>::MyIterator::MyIterator::operator--() {
+    --pos;
+    return *this;
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator ArraySequence<T>::MyIterator::operator+(const typename MyIterator::difference_type& n) const {
+    return MyIterator(pos + n);
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator& ArraySequence<T>::MyIterator::operator+=(const typename MyIterator::difference_type& n) {
+    pos += n;
+    return *this;
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator& ArraySequence<T>::MyIterator::operator-=(const typename MyIterator::difference_type& n) {
+    pos -= n;
+    return *this;
+}
+
+template <typename T>
+typename ArraySequence<T>::MyIterator ArraySequence<T>::MyIterator::operator-(const typename MyIterator::difference_type& n) const {
+    return MyIterator(pos - n);
+}
+
+template <typename T>
+bool ArraySequence<T>::MyIterator::operator!=(const MyIterator& it) const {
+    return pos != it.pos;
+}
+
+template <typename T>
+bool ArraySequence<T>::MyIterator::operator==(const MyIterator& it) const {
+    return pos == it.pos;
+}
+
+template <typename T>
+bool ArraySequence<T>::MyIterator::operator<(const MyIterator& it) const {
+    return pos < it.pos;
+}
+
+template <typename T>
+bool ArraySequence<T>::MyIterator::operator>(const MyIterator& it) const {
+    return pos > it.pos;
+}
+
+template <typename T>
+bool ArraySequence<T>::MyIterator::operator<=(const MyIterator& it) const {
+    return pos <= it.pos;
+}
+
+template <typename T>
+bool ArraySequence<T>::MyIterator::operator>=(const MyIterator& it) const {
+    return pos >= it.pos;
+}
+
+template <typename T>
+ArraySequence<T>::MyIterator::~MyIterator() {}
+
+//ARRAY ITERATOR METHODS//
+
+template <typename T>
+typename ArraySequence<T>::iterator ArraySequence<T>::begin() {
+    return MyIterator(data);
+}
+
+template <typename T>
+typename ArraySequence<T>::iterator ArraySequence<T>::end() {
+    return MyIterator(data + ISequence<T>::length);
+}
+
+template <typename T>
+typename ArraySequence<T>::const_iterator ArraySequence<T>::begin() const {
+    return MyIterator(data);
+}
+
+template <typename T>
+typename ArraySequence<T>::const_iterator ArraySequence<T>::end() const {
+    return MyIterator(data + ISequence<T>::length);
 }

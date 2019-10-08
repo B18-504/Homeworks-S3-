@@ -3,13 +3,13 @@
 template <typename T>
 ListSequence<T>::ListSequence() {
     head = tail  = nullptr;
-    Sequence<T>::length = 0;
+    ISequence<T>::length = 0;
 }
 
 template <typename T>
-ListSequence<T>::ListSequence(Sequence<T>* sequence) {
+ListSequence<T>::ListSequence(ISequence<T>* sequence) {
     head = tail  = nullptr;
-    Sequence<T>::length = 0;
+    ISequence<T>::length = 0;
     for (int i = 0; i < sequence->getLength(); i++) {
         this->append(sequence->get(i));
     }
@@ -22,20 +22,37 @@ ListSequence<T>::ListSequence(int n, int leftLimit, int rightLimit) {
         throw e;
     }
     head = tail  = nullptr;
-    Sequence<T>::length = 0;
+    ISequence<T>::length = 0;
     for (int i = 0; i < n; i++) {
         this->append(rnd::randInt(leftLimit, rightLimit));
     }
 }
 
 template <typename T>
+ListSequence<T>& ListSequence<T>::operator=(const ListSequence<T>& sequence) {
+    Node *tmp = nullptr;
+    while (tmp != nullptr) {
+        Node *next = tmp->next;
+        delete tmp;
+        tmp = next;
+    }
+    head = nullptr;
+    tail = nullptr;
+    ISequence<T>::length = 0;
+    for (int i = 0; i < sequence.getLength(); i++) {
+        this->append(sequence.get(i));
+    }
+    return *this;
+}
+
+template <typename T>
 int ListSequence<T>::getLength() const {
-    return Sequence<T>::length;
+    return ISequence<T>::length;
 }
 
 template <typename T>
 bool ListSequence<T>::getIsEmpty() const {
-    if (!Sequence<T>::length) {
+    if (!ISequence<T>::length) {
         return true;
     }
     return false;
@@ -43,12 +60,12 @@ bool ListSequence<T>::getIsEmpty() const {
 
 template <typename T>
 T ListSequence<T>::get(int index) const {
-    if ((index >= Sequence<T>::length) || (index < 0)) {
+    if ((index >= ISequence<T>::length) || (index < 0)) {
         exception_outOfRange e;
         throw e;
     }
     Node* tmp = nullptr;
-    if (index < Sequence<T>::length/2) {
+    if (index < ISequence<T>::length/2) {
         tmp = head;
         for (int i = 0; i < index; i++) {
             tmp = tmp->next;
@@ -56,7 +73,7 @@ T ListSequence<T>::get(int index) const {
     }
     else {
         tmp = tail;
-        for (int i = 0; i < Sequence<T>::length - index - 1; i++) {
+        for (int i = 0; i < ISequence<T>::length - index - 1; i++) {
             tmp = tmp->prev;
         }
     }
@@ -65,7 +82,7 @@ T ListSequence<T>::get(int index) const {
 
 template <typename T>
 T ListSequence<T>::getFirst() const {
-    if (!Sequence<T>::length) {
+    if (!ISequence<T>::length) {
         exception_sequenceIsEmpty e;
         throw e;
     }
@@ -74,7 +91,7 @@ T ListSequence<T>::getFirst() const {
 
 template <typename T>
 T ListSequence<T>::getLast() const {
-    if (!Sequence<T>::length) {
+    if (!ISequence<T>::length) {
         exception_sequenceIsEmpty e;
         throw e;
     }
@@ -87,7 +104,7 @@ ListSequence<T>* ListSequence<T>::getSubSequence(int startIndex, int endIndex) c
         exception_incorrectSelection e;
         throw e;
     }
-    if (endIndex >= Sequence<T>::length) {
+    if (endIndex >= ISequence<T>::length) {
         exception_outOfRange e;
         throw e;
     }
@@ -100,8 +117,8 @@ ListSequence<T>* ListSequence<T>::getSubSequence(int startIndex, int endIndex) c
 
 template <typename T>
 void ListSequence<T>::append(T item) {
-    Sequence<T>::length++;
-    if (!(Sequence<T>::length - 1)) {
+    ISequence<T>::length++;
+    if (!(ISequence<T>::length - 1)) {
         head = new Node;
         head->next = nullptr;
         head->prev = nullptr;
@@ -119,8 +136,8 @@ void ListSequence<T>::append(T item) {
 
 template <typename T>
 void ListSequence<T>::prepend(T item) {
-    Sequence<T>::length++;
-    if (!(Sequence<T>::length - 1)) {
+    ISequence<T>::length++;
+    if (!(ISequence<T>::length - 1)) {
         head = new Node;
         head->next = nullptr;
         head->prev = nullptr;
@@ -138,13 +155,13 @@ void ListSequence<T>::prepend(T item) {
 
 template <typename T>
 void ListSequence<T>::insertAt(int index, T item) {
-    if (index > Sequence<T>::length) {
+    if (index > ISequence<T>::length) {
         exception_outOfRange e;
         throw e;
     }
-    Sequence<T>::length++;
+    ISequence<T>::length++;
     Node *tmp = nullptr;
-    if (index < Sequence<T>::length/2) {
+    if (index < ISequence<T>::length/2) {
         tmp = head;
         for (int i = 0; i < index; i++) {
             tmp = tmp->next;
@@ -152,7 +169,7 @@ void ListSequence<T>::insertAt(int index, T item) {
     }
     else {
         tmp = tail;
-        for (int i = 0; i < Sequence<T>::length - index - 1; i++) {
+        for (int i = 0; i < ISequence<T>::length - index - 1; i++) {
             tmp = tmp->prev;
         }
     }
@@ -182,18 +199,18 @@ void ListSequence<T>::remove(T item) {
             tmp->next->prev = tmp->prev;
         }
         delete tmp;
-        Sequence<T>::length--;
+        ISequence<T>::length--;
     }
 }
 
 template <typename T>
 void ListSequence<T>::replace(int index, T item) {
-    if (index >= Sequence<T>::length) {
+    if (index >= ISequence<T>::length) {
         exception_outOfRange e;
         throw e;
     }
     Node* tmp = nullptr;
-    if (index < Sequence<T>::length/2) {
+    if (index < ISequence<T>::length/2) {
         tmp = head;
         for (int i = 0; i < index; i++) {
             tmp = tmp->next;
@@ -201,7 +218,7 @@ void ListSequence<T>::replace(int index, T item) {
     }
     else {
         tmp = tail;
-        for (int i = 0; i < Sequence<T>::length - index - 1; i++) {
+        for (int i = 0; i < ISequence<T>::length - index - 1; i++) {
             tmp = tmp->prev;
         }
     }
@@ -218,7 +235,148 @@ ListSequence<T>::~ListSequence() {
     }
     head = nullptr;
     tail = nullptr;
-    Sequence<T>::length = 0;
+    ISequence<T>::length = 0;
 }
 
+//ITERATOR METHODS//
 
+template <typename T>
+ListSequence<T>::MyIterator::MyIterator(ListSequence<T>::Node* pos): pos(pos) {}
+
+template <typename T>
+ListSequence<T>::MyIterator::MyIterator(const MyIterator& it): pos(it.pos) {}
+
+template <typename T>
+typename ListSequence<T>::MyIterator::reference ListSequence<T>::MyIterator::operator*() const {
+    return pos->data;
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator::pointer ListSequence<T>::MyIterator::operator->() const {
+    return *(pos->data);
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator::reference ListSequence<T>::MyIterator::operator[](const typename MyIterator::difference_type& n) const {
+    return pos->data[n];
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator::difference_type ListSequence<T>::MyIterator::operator-(const MyIterator& it) const {
+    return pos - it.pos;
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::operator++(int) {
+    pos = pos->next;
+    return MyIterator(pos);
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator++() {
+    pos = pos->next;
+    return *this;
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::operator--(int) {
+    pos = pos->prev;
+    return MyIterator(pos);
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator--() {
+    pos = pos->prev;
+    return *this;
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::operator+(const typename MyIterator::difference_type& n) const {
+    Node *tmp = pos;
+    for (int i = 0; i < n; i++) {
+        tmp = tmp->next;
+    }
+    return MyIterator(tmp);
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator+=(const typename MyIterator::difference_type& n) {
+    for (int i = 0; i < n; i++) {
+        pos = pos->next;
+    }
+    return *this;
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::operator-(const typename MyIterator::difference_type& n) const {
+    Node *tmp = pos;
+    for (int i = 0; i < n; i++) {
+        tmp = tmp->next;
+    }
+    return MyIterator(tmp);
+}
+
+template <typename T>
+typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator-=(const typename MyIterator::difference_type& n) {
+    for (int i = 0; i < n; i++) {
+        pos = pos->prev;
+    }
+    return *this;
+}
+
+template <typename T>
+bool ListSequence<T>::MyIterator::operator!=(const MyIterator& it) const {
+    if (!it.pos || !pos) return pos != it.pos;
+    return pos->data != it.pos->data;
+}
+
+template <typename T>
+bool ListSequence<T>::MyIterator::operator==(const MyIterator& it) const {
+    if (!it.pos || !pos) return pos == it.pos;
+    return pos->data == it.pos->data;
+}
+
+template <typename T>
+bool ListSequence<T>::MyIterator::operator<(const MyIterator& it) const {
+    return pos->data < it.pos->data;
+}
+
+template <typename T>
+bool ListSequence<T>::MyIterator::operator>(const MyIterator& it) const {
+    return pos->data > it.pos->data;
+}
+
+template <typename T>
+bool ListSequence<T>::MyIterator::operator<=(const MyIterator& it) const {
+    return pos->data <= it.pos->data;
+}
+
+template <typename T>
+bool ListSequence<T>::MyIterator::operator>=(const MyIterator& it) const {
+    return pos->data >= it.pos->data;
+}
+
+template <typename T>
+ListSequence<T>::MyIterator::~MyIterator() {}
+
+//LIST ITERATOR METHODS//
+
+template <typename T>
+typename ListSequence<T>::iterator ListSequence<T>::begin() {
+    return MyIterator(head);
+}
+
+template <typename T>
+typename ListSequence<T>::iterator ListSequence<T>::end() {
+    return MyIterator(tail->next);
+}
+
+template <typename T>
+typename ListSequence<T>::const_iterator ListSequence<T>::begin() const {
+    return MyIterator(head);
+}
+
+template <typename T>
+typename ListSequence<T>::const_iterator ListSequence<T>::end() const {
+    return MyIterator(tail);
+}

@@ -4,7 +4,9 @@
 #include "sequence.hpp"
 
 template <typename T>
-class ListSequence : public Sequence<T> {
+class ListSequence: public ISequence<T> {
+    template <typename Val>
+    friend class MineIterator;
 private:
     class Node {
     public:
@@ -16,23 +18,9 @@ private:
     Node* tail;
 public:
     ListSequence(); //default constructor
-    ListSequence(Sequence<T>* sequence); //copying constructor
+    ListSequence(ISequence<T>* sequence); //copying constructor
     ListSequence(int n, int leftLimit, int rightLimit); //create sequence with n random int numbers in given selection
-    ListSequence<T>& operator=(const Sequence<T>& sequence) {
-        Node *tmp = nullptr;
-        while (tmp != nullptr) {
-            Node *next = tmp->next;
-            delete tmp;
-            tmp = next;
-        }
-        head = nullptr;
-        tail = nullptr;
-        Sequence<T>::length = 0;
-        for (int i = 0; i < sequence.getLength(); i++) {
-            this->append(sequence.get(i));
-        }
-        return *this;
-    }
+    ListSequence<T>& operator=(const ListSequence<T>& sequence);
     ~ListSequence(); 
 public:
     virtual int getLength() const override;
@@ -47,6 +35,42 @@ public:
     virtual void insertAt(int index, T item) override;
     virtual void remove(T item) override;
     virtual void replace(int index, T item) override;
+private:
+    class MyIterator: public std::iterator<std::bidirectional_iterator_tag, T> {
+        friend class ListSequence;
+    private:
+        ListSequence::Node* pos;
+        MyIterator(ListSequence::Node* pos);
+    public:
+        MyIterator(const MyIterator &it);
+        ~MyIterator();
+    public:
+        typename MyIterator::reference operator*() const;
+        typename MyIterator::pointer operator->() const;
+        typename MyIterator::reference operator[](const typename MyIterator::difference_type& n) const;
+        typename MyIterator::difference_type operator-(const MyIterator& it) const;
+        MyIterator operator++(int);
+        MyIterator& operator++();
+        MyIterator operator--(int);
+        MyIterator& operator--();
+        MyIterator operator+(const typename MyIterator::difference_type& n) const;
+        MyIterator& operator+=(const typename MyIterator::difference_type& n);
+        MyIterator operator-(const typename MyIterator::difference_type& n) const;
+        MyIterator& operator-=(const typename MyIterator::difference_type& n);
+        bool operator!=(const MyIterator& it) const;
+        bool operator==(const MyIterator& it) const;
+        bool operator<(const MyIterator& it) const;
+        bool operator>(const MyIterator& it) const;
+        bool operator<=(const MyIterator& it) const;
+        bool operator>=(const MyIterator& it) const;
+    };
+public:
+    typedef MyIterator iterator;
+    typedef MyIterator const const_iterator;
+    iterator begin();
+    iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
 };
 
 #endif
