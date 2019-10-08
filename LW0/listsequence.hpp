@@ -5,8 +5,6 @@
 
 template <typename T>
 class ListSequence: public ISequence<T> {
-    template <typename Val>
-    friend class MineIterator;
 private:
     class Node {
     public:
