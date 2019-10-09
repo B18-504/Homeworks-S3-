@@ -94,7 +94,17 @@ public:
 	Bad_Console_Input()
 	{
 		Exception::code = 0x16;
-		Exception::message = "Parser couldn't handle the input, size limits are likely to be exceeded";
+		Exception::message = "Console input has wrong syntax";
+	}
+};
+
+class Bad_File_Input : public Exception
+{
+public:
+	Bad_File_Input()
+	{
+		Exception::code = 0x17;
+		Exception::message = "File input has wrong syntax";
 	}
 };
 
@@ -103,8 +113,18 @@ class Bad_String_Format : public Exception
 public:
 	Bad_String_Format()
 	{
-		Exception::code = 0x17;
+		Exception::code = 0x18;
 		Exception::message = "String-to-type conversion failed: bad string format";
+	}
+};
+
+class File_Stream_Error : public Exception
+{
+public:
+	File_Stream_Error()
+	{
+		Exception::code = 0x19;
+		Exception::message = "Error occured while working with file IO";
 	}
 };
 
@@ -115,4 +135,6 @@ typedef Container_Is_Empty CIE;
 typedef Invalid_Type_Name ITN;
 typedef Invalid_Implementation_Subclass IIS;
 typedef Bad_Console_Input BCI;
+typedef Bad_File_Input BFI;
 typedef Bad_String_Format BSF;
+typedef File_Stream_Error FSE;

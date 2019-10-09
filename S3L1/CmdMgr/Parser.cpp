@@ -1,5 +1,11 @@
 #pragma once
 
+
+
+//Консольный ввод
+
+
+
 struct word
 {
 	char body[254];
@@ -95,7 +101,7 @@ void input(wordlist &a, char &err)										//1 - слишком длинное 
 	{
 		wipe(a);
 	}
-	--err;;
+	--err;
 }
 
 void copy(char **&target, wordlist &source, char &err)
@@ -125,6 +131,97 @@ void input(char **&p, unsigned char &length, char &err)					//1 - слишком
 	wipe(a);
 }
 
-//void finput(char **&p, unsigned char &length, char &err)
-//{
-//}
+
+
+//Файловый ввод
+
+
+
+
+void finput(word &a, FILE *fstream, char &flag)							//0 - успешный ввод слова
+{																		//1 - успешный ввод последнего в строке слова
+	flag = 4;															//2 - слишком длинное слово
+	a.l = 0;															//3 - успешный ввод последнего в файле слова
+	a.next = 0;
+	int buff;															
+	char *ptr = a.body;
+	buff = fgetc(fstream);
+	while (flag == 4)
+	{
+		if (buff == ' ')
+		{
+			flag = 0;
+			*ptr = 0;
+		}
+		else if(buff == '\n')
+		{
+			flag = 1;
+			*ptr = 0;
+		}
+		else if(a.l == 254)
+		{
+			flag = 2;
+			*ptr = 0;
+		}
+		else if(buff == EOF)
+		{
+			flag = 3;
+			*ptr = 0;
+		}
+		else
+		{
+			*(ptr++) = buff;
+			a.l++;
+			buff = fgetc(fstream);
+		}
+	}															
+}
+
+void finput(wordlist &a, FILE *fstream, char &err)						//1 - слишком длинное слово
+{																		//2 - успешный ввод последнего в файле слова
+	word *ptr = (word*)malloc(sizeof(word));							//3 - слишком много слов
+	a.first = ptr;
+	a.l = 0;
+	err = 0;
+	while (!err)
+	{
+		if (a.l == 255)
+		{
+			err = 4;
+		}
+		else
+		{
+			finput(*ptr, fstream, err);
+			if(ptr->l)
+			{
+				++a.l;
+				if(!err)
+				{
+					ptr->next = (word*)malloc(sizeof(word));
+					ptr = ptr->next;
+				}
+			}
+			else
+			{
+				ptr->next = 0;
+			}
+		}
+	}
+	if (err > 1)
+	{
+		wipe(a);
+	}
+	--err;
+}
+
+void finput(char **&p, FILE *fstream, unsigned char &length, char &err)	//1 - слишком длинное слово
+{																		//2 - файл закончился
+	wordlist a;															//3 - слишком много слов
+	finput(a, fstream, err);
+	length = a.l;
+	if (!err)
+	{
+		copy(p, a, err);
+	};
+	wipe(a);
+}

@@ -12,11 +12,16 @@ void create(binding **&argv, unsigned char argc)
 			cmp((*(argv+2))->type, "input", b);
 			if(b)
 			{
-				bind(*(HTable*)((*argv)->ptr), malloc(*(unsigned int*)((*(argv+1))->ptr)), (*(argv+2))->ptr, (*(argv+1))->key, err);
+				//void *ptr = malloc(*(unsigned int*)((*(argv+1))->ptr));
+				bind(*(HTable*)((*argv)->ptr), 0, (*(argv+2))->ptr, (*(argv+1))->key, err);
 				if(err)
 				{
 					printf("Облажались, переменная не создана!\n");
 				}
+				//else
+				//{
+				//	ptr = 0;
+				//}
 			}
 		}
 		else

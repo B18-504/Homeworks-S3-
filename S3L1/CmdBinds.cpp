@@ -19,7 +19,32 @@ void inputnum(void ***argv)
 	}
 	else
 	{
-		throw(BCI());
+		throw BCI();
+	}
+}
+
+void fprintnum(void ***argv)
+{
+	fprintf((FILE*)(*(argv[1])), "%s\n", ((Number*)(*(argv[0])))->ValueAsStr());
+}
+
+void finputnum(void ***argv)
+{
+	if(!bool(*(argv[1])))
+	{
+		throw FSE();
+	}
+	char **words;
+	unsigned char n;
+	char err;
+	finput(words, (FILE*)(*(argv[1])), n, err);
+	if((!err) * (n == 1))
+	{
+		(*(argv[0])) = StrToNumber(*words);
+	}
+	else
+	{
+		throw BFI();
 	}
 }
 
@@ -41,7 +66,7 @@ void Get(void ***argv)
 {
 	Sequence<Number> *seq = *argv[0];
 	uint u = ((Number*)(*(argv[1])))->ValueAsUint();
-	Number *tmp = (*seq)[u]->Clone();		//arg2 = arg0[arg1]
+	Number *tmp = (*seq)[u]->Clone();									//arg2 = arg0[arg1]
 	delete (Number*)(*(argv[2]));
 	*(argv[2]) = tmp;
 	tmp = 0;
@@ -96,13 +121,52 @@ void bTest1(void ***)
 	Test1();
 }
 
+void StartInFile(void ***argv)
+{
+	(*(argv[0])) = fopen((char*)(*(argv[1])), "r");
+	if(!bool(*(argv[0])))
+	{
+		throw FSE();
+	}
+}
+
+void StartOutFile(void ***argv)
+{
+	(*(argv[0])) = fopen((char*)(*(argv[1])), "w");
+	if(!bool(*(argv[0])))
+	{
+		throw FSE();
+	}
+}
+
+void StopFile(void ***argv)
+{
+	if(bool(*(argv[0])))
+	{
+		fclose(*(argv[0]));
+		*(argv[0]) = 0;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
 void binds(HTable &table)
 {
 	char err;
 	
 	bindt(table, "number", sizeof(Number*), err);						//Виртуальные типы можно привязывать как обычные
-																		//Перед использованием СТРОГО необходимо вызвать инициализирующую функцию
-	bindvt(table, "sequence", err);										//Тк инициализация объекта абстрактного типа недопустима
+	bindt(table, "file", sizeof(FILE*), err);							//Перед использованием СТРОГО необходимо вызвать инициализирующую функцию
+																		//Тк инициализация объекта абстрактного типа недопустима
+																		
+	bindvt(table, "sequence", err);										
 	bindit(table, "array", "sequence", generateArray, err);
 	bindit(table, "list", "sequence", generateList, err);				//Привязка виртуальных типов через специальный интерфейс
 																		//Создание возможно ТОЛЬКО указанием имплементирующего типа
@@ -118,6 +182,10 @@ void binds(HTable &table)
 	bindf(table, printnum, "print", types, err);
 	bindf(table, inputnum, "input", types, err);
 	
+	copy(types[0], "file", err);
+	
+	bindf(table, StopFile, "stopfile", types, err);
+	
 	set(types, 2, err);
 	
 	copy(types[0], "sequence", err);
@@ -130,6 +198,18 @@ void binds(HTable &table)
 	bindf(table, Append, "append", types, err);
 	bindf(table, Prepend, "prepend", types, err);
 	bindf(table, Remove, "remove", types, err);
+	
+	copy(types[0], "file", err);
+	copy(types[1], "input", err);
+	
+	bindf(table, StartInFile, "startinfile", types, err);
+	bindf(table, StartOutFile, "startoutfile", types, err);
+	
+	copy(types[0], "number", err);
+	copy(types[1], "file", err);
+	
+	bindf(table, finputnum, "input", types, err);
+	bindf(table, fprintnum, "print", types, err);
 	
 	set(types, 3, err);
 	
