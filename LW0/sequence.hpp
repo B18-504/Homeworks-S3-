@@ -21,6 +21,16 @@ public:
     virtual void insertAt(int index, T item) = 0; //insert item at a specific point
     virtual void remove(T item) = 0; //remove specific item
     virtual void replace(int index, T item) = 0; //replace an item
+protected:
+    class IIterator: public std::iterator<std::random_access_iterator_tag, T> { //virtual Iterator class
+    };
+public:
+    typedef IIterator iterator;
+    typedef IIterator const const_iterator;
+    iterator begin();
+    iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
 };
 
 #endif

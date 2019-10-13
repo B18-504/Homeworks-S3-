@@ -36,6 +36,7 @@ private:
         MyIterator(const MyIterator &it);
         ~MyIterator();
     public:
+        MyIterator& operator=(const MyIterator& it);
         typename MyIterator::reference operator*() const;
         typename MyIterator::pointer operator->() const;
         typename MyIterator::reference operator[](const typename MyIterator::difference_type& n) const;
@@ -57,7 +58,7 @@ private:
     };
 public:
     typedef MyIterator iterator;
-    typedef MyIterator const const_iterator;
+    typedef MyIterator const_iterator;
     iterator begin();
     iterator end();
     const_iterator begin() const;

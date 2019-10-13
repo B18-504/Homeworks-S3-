@@ -34,37 +34,26 @@ public:
     virtual void remove(T item) override;
     virtual void replace(int index, T item) override;
 private:
-    class MyIterator: public std::iterator<std::bidirectional_iterator_tag, T> {
+    class MyIterator: public std::iterator<std::forward_iterator_tag, T> {
         friend class ListSequence;
     private:
-        ListSequence::Node* pos;
-        MyIterator(ListSequence::Node* pos);
+        Node* pos;
+        MyIterator(Node* pos);
     public:
         MyIterator(const MyIterator &it);
         ~MyIterator();
     public:
+        MyIterator& operator=(const MyIterator& it);
         typename MyIterator::reference operator*() const;
         typename MyIterator::pointer operator->() const;
-        typename MyIterator::reference operator[](const typename MyIterator::difference_type& n) const;
-        typename MyIterator::difference_type operator-(const MyIterator& it) const;
         MyIterator operator++(int);
         MyIterator& operator++();
-        MyIterator operator--(int);
-        MyIterator& operator--();
-        MyIterator operator+(const typename MyIterator::difference_type& n) const;
-        MyIterator& operator+=(const typename MyIterator::difference_type& n);
-        MyIterator operator-(const typename MyIterator::difference_type& n) const;
-        MyIterator& operator-=(const typename MyIterator::difference_type& n);
         bool operator!=(const MyIterator& it) const;
         bool operator==(const MyIterator& it) const;
-        bool operator<(const MyIterator& it) const;
-        bool operator>(const MyIterator& it) const;
-        bool operator<=(const MyIterator& it) const;
-        bool operator>=(const MyIterator& it) const;
     };
 public:
     typedef MyIterator iterator;
-    typedef MyIterator const const_iterator;
+    typedef MyIterator const_iterator;
     iterator begin();
     iterator end();
     const_iterator begin() const;

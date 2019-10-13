@@ -241,10 +241,16 @@ ListSequence<T>::~ListSequence() {
 //ITERATOR METHODS//
 
 template <typename T>
-ListSequence<T>::MyIterator::MyIterator(ListSequence<T>::Node* pos): pos(pos) {}
+ListSequence<T>::MyIterator::MyIterator(Node* pos): pos(pos) {}
 
 template <typename T>
 ListSequence<T>::MyIterator::MyIterator(const MyIterator& it): pos(it.pos) {}
+
+template <typename T>
+typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator=(const MyIterator& it) {
+    pos = it.pos;
+    return *this;
+}
 
 template <typename T>
 typename ListSequence<T>::MyIterator::reference ListSequence<T>::MyIterator::operator*() const {
@@ -253,113 +259,35 @@ typename ListSequence<T>::MyIterator::reference ListSequence<T>::MyIterator::ope
 
 template <typename T>
 typename ListSequence<T>::MyIterator::pointer ListSequence<T>::MyIterator::operator->() const {
-    return *(pos->data);
+    return pos;
 }
 
 template <typename T>
-typename ListSequence<T>::MyIterator::reference ListSequence<T>::MyIterator::operator[](const typename MyIterator::difference_type& n) const {
-    return pos->data[n];
-}
-
-template <typename T>
-typename ListSequence<T>::MyIterator::difference_type ListSequence<T>::MyIterator::operator-(const MyIterator& it) const {
-    return pos - it.pos;
-}
-
-template <typename T>
-typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::operator++(int) {
+typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::MyIterator::operator++(int) {
     pos = pos->next;
     return MyIterator(pos);
 }
 
 template <typename T>
-typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator++() {
+typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::MyIterator::operator++() {
     pos = pos->next;
-    return *this;
-}
-
-template <typename T>
-typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::operator--(int) {
-    pos = pos->prev;
-    return MyIterator(pos);
-}
-
-template <typename T>
-typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator--() {
-    pos = pos->prev;
-    return *this;
-}
-
-template <typename T>
-typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::operator+(const typename MyIterator::difference_type& n) const {
-    Node *tmp = pos;
-    for (int i = 0; i < n; i++) {
-        tmp = tmp->next;
-    }
-    return MyIterator(tmp);
-}
-
-template <typename T>
-typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator+=(const typename MyIterator::difference_type& n) {
-    for (int i = 0; i < n; i++) {
-        pos = pos->next;
-    }
-    return *this;
-}
-
-template <typename T>
-typename ListSequence<T>::MyIterator ListSequence<T>::MyIterator::operator-(const typename MyIterator::difference_type& n) const {
-    Node *tmp = pos;
-    for (int i = 0; i < n; i++) {
-        tmp = tmp->next;
-    }
-    return MyIterator(tmp);
-}
-
-template <typename T>
-typename ListSequence<T>::MyIterator& ListSequence<T>::MyIterator::operator-=(const typename MyIterator::difference_type& n) {
-    for (int i = 0; i < n; i++) {
-        pos = pos->prev;
-    }
     return *this;
 }
 
 template <typename T>
 bool ListSequence<T>::MyIterator::operator!=(const MyIterator& it) const {
-    if (!it.pos || !pos) return pos != it.pos;
-    return pos->data != it.pos->data;
+    return pos != it.pos;
 }
 
 template <typename T>
 bool ListSequence<T>::MyIterator::operator==(const MyIterator& it) const {
-    if (!it.pos || !pos) return pos == it.pos;
-    return pos->data == it.pos->data;
-}
-
-template <typename T>
-bool ListSequence<T>::MyIterator::operator<(const MyIterator& it) const {
-    return pos->data < it.pos->data;
-}
-
-template <typename T>
-bool ListSequence<T>::MyIterator::operator>(const MyIterator& it) const {
-    return pos->data > it.pos->data;
-}
-
-template <typename T>
-bool ListSequence<T>::MyIterator::operator<=(const MyIterator& it) const {
-    return pos->data <= it.pos->data;
-}
-
-template <typename T>
-bool ListSequence<T>::MyIterator::operator>=(const MyIterator& it) const {
-    return pos->data >= it.pos->data;
+    return pos == it.pos;
 }
 
 template <typename T>
 ListSequence<T>::MyIterator::~MyIterator() {}
 
-//LIST ITERATOR METHODS//
+//ARRAY ITERATOR METHODS//
 
 template <typename T>
 typename ListSequence<T>::iterator ListSequence<T>::begin() {
@@ -368,7 +296,7 @@ typename ListSequence<T>::iterator ListSequence<T>::begin() {
 
 template <typename T>
 typename ListSequence<T>::iterator ListSequence<T>::end() {
-    return MyIterator(tail->next);
+    return MyIterator(nullptr);
 }
 
 template <typename T>
@@ -378,5 +306,5 @@ typename ListSequence<T>::const_iterator ListSequence<T>::begin() const {
 
 template <typename T>
 typename ListSequence<T>::const_iterator ListSequence<T>::end() const {
-    return MyIterator(tail);
+    return MyIterator(nullptr);
 }

@@ -184,6 +184,12 @@ template <typename T>
 ArraySequence<T>::MyIterator::MyIterator(const MyIterator& it): pos(it.pos) {}
 
 template <typename T>
+typename ArraySequence<T>::MyIterator& ArraySequence<T>::MyIterator::operator=(const MyIterator& it) {
+    pos = it.pos;
+    return *this;
+}
+
+template <typename T>
 typename ArraySequence<T>::MyIterator::reference ArraySequence<T>::MyIterator::operator*() const {
     return *pos;
 }
@@ -237,14 +243,14 @@ typename ArraySequence<T>::MyIterator& ArraySequence<T>::MyIterator::operator+=(
 }
 
 template <typename T>
-typename ArraySequence<T>::MyIterator& ArraySequence<T>::MyIterator::operator-=(const typename MyIterator::difference_type& n) {
-    pos -= n;
-    return *this;
+typename ArraySequence<T>::MyIterator ArraySequence<T>::MyIterator::operator-(const typename MyIterator::difference_type& n) const {
+    return MyIterator(pos - n);
 }
 
 template <typename T>
-typename ArraySequence<T>::MyIterator ArraySequence<T>::MyIterator::operator-(const typename MyIterator::difference_type& n) const {
-    return MyIterator(pos - n);
+typename ArraySequence<T>::MyIterator& ArraySequence<T>::MyIterator::operator-=(const typename MyIterator::difference_type& n) {
+    pos -= n;
+    return *this;
 }
 
 template <typename T>
