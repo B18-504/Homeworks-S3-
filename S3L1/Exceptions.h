@@ -128,6 +128,26 @@ public:
 	}
 };
 
+class Slider_Is_Unbound : public Exception
+{
+public:
+	Slider_Is_Unbound()
+	{
+		Exception::code = 0x1a;
+		Exception::message = "Slider is not bound to a sequence. The referred sequence was deleted, critically changed or initialisation went wrong";
+	}
+};
+
+class Null_Ptr_Exception : public Exception
+{
+public:
+	Null_Ptr_Exception()
+	{
+		Exception::code = 0x1b;
+		Exception::message = "Tried to access by nullptr";
+	}
+};
+
 typedef Max_Size_Reached MSR;
 typedef Mem_Alloc_Error MAE;
 typedef Out_of_Range OoR;
@@ -138,3 +158,5 @@ typedef Bad_Console_Input BCI;
 typedef Bad_File_Input BFI;
 typedef Bad_String_Format BSF;
 typedef File_Stream_Error FSE;
+typedef Slider_Is_Unbound SIU;
+typedef Null_Ptr_Exception NPE;

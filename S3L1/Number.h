@@ -3,6 +3,8 @@
 class Number
 {
 public:
+	virtual void SetRandVal() = 0;
+
 	virtual Number *Clone() = 0;
 	
 	virtual double ValueAsDbl() = 0;
@@ -21,6 +23,8 @@ public:
 	Int() = default;
 	Int(int a);
 	
+	void SetRandVal() override;
+	
 	Number *Clone() override;
 	
 	double ValueAsDbl() override;
@@ -36,6 +40,8 @@ public:
 	
 	Uint() = default;
 	Uint(uint a);
+	
+	void SetRandVal() override;
 	
 	Number *Clone() override;
 	
@@ -53,6 +59,8 @@ public:
 	Double() = default;
 	Double(double a);
 	
+	void SetRandVal() override;
+	
 	Number *Clone() override;
 	
 	double ValueAsDbl() override;
@@ -68,6 +76,8 @@ public:
 	
 	Bool() = default;
 	Bool(bool a);
+	
+	void SetRandVal() override;
 	
 	Number *Clone() override;
 	

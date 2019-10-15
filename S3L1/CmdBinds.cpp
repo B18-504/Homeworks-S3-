@@ -30,10 +30,6 @@ void fprintnum(void ***argv)
 
 void finputnum(void ***argv)
 {
-	if(!bool(*(argv[1])))
-	{
-		throw FSE();
-	}
 	char **words;
 	unsigned char n;
 	char err;
@@ -47,6 +43,117 @@ void finputnum(void ***argv)
 		throw BFI();
 	}
 }
+
+
+
+
+void inputseq(void ***argv)
+{
+	char **words;
+	unsigned char n;
+	char err;
+	input(words, n, err);
+	if(!err)
+	{
+		try
+		{
+			((Sequence<Number>*)(**argv))->SetFromStr(words, n);
+		}
+		catch(Exception E)
+		{
+			((Sequence<Number>*)(**argv))->Clear();
+			throw E;
+		}
+	}
+	else
+	{
+		throw BCI();
+	}
+}
+
+void printseq(void ***argv)
+{
+	Sequence<Number>::Slider &sl = ((Sequence<Number>*)(**argv))->InitSlider(0);
+	if(sl.IsBound())
+	{
+		try
+		{
+M:			printf("%s ", sl.GetVal()->ValueAsStr());					//бесконечный цикл, только не говорите, что нечитаемо
+			sl.ShiftRight();
+			goto M;
+		}
+		catch(Exception E)
+		{
+			printf("\n");
+			if(E.code != 0x12)
+			{
+				throw E;
+			}
+		}
+	}
+	else
+	{
+		printf("Empty sequence\n");
+	}
+}
+
+void finputseq(void ***argv)
+{
+	char **words;
+	unsigned char n;
+	char err;
+	finput(words, (FILE*)(*(argv[1])), n, err);
+	if(!err)
+	{
+		try
+		{
+			((Sequence<Number>*)(**argv))->SetFromStr(words, n);
+		}
+		catch(Exception E)
+		{
+			((Sequence<Number>*)(**argv))->Clear();
+			throw E;
+		}
+	}
+	else
+	{
+		throw BFI();
+	}
+}
+
+void fprintseq(void ***argv)
+{
+	if(!bool(*(argv[1])))
+	{
+		throw FSE();
+	}
+	Sequence<Number>::Slider &sl = ((Sequence<Number>*)(*(argv[0])))->InitSlider(0);
+	if(sl.IsBound())
+	{
+		try
+		{
+M:			fprintf((FILE*)(*(argv[1])), "%s ", sl.GetVal()->ValueAsStr());					//бесконечный цикл, только не говорите, что нечитаемо
+			sl.ShiftRight();
+			goto M;
+		}
+		catch(Exception E)
+		{
+			fprintf((FILE*)(*(argv[1])), "\n");
+			if(E.code != 0x12)
+			{
+				throw E;
+			}
+		}
+	}
+	else
+	{
+		printf("Empty sequence\n");
+	}
+}
+
+
+
+
 
 void GetLen(void ***argv)
 {
@@ -116,10 +223,16 @@ void GetSubS(void ***argv)
 	*(argv[1]) = tmp;
 }
 
+
+
+
 void bTest1(void ***)
 {
 	Test1();
 }
+
+
+
 
 void StartInFile(void ***argv)
 {
@@ -171,22 +284,30 @@ void binds(HTable &table)
 	bindit(table, "list", "sequence", generateList, err);				//Привязка виртуальных типов через специальный интерфейс
 																		//Создание возможно ТОЛЬКО указанием имплементирующего типа
 	char **types;
-	set(types, 0, err);
 	
-	bindf(table, bTest1, "test1", types, err);
+	set(types, 4, err);
 	
-	set(types, 1, err);
+	copy(types[0], "sequence", err);
+	copy(types[1], "sequence", err);
+	copy(types[2], "number", err);
+	copy(types[3], "number", err);
 	
-	copy(types[0], "number", err);
+	bindf(table, GetSubS, "getsubs", types, err);
 	
-	bindf(table, printnum, "print", types, err);
-	bindf(table, inputnum, "input", types, err);
 	
-	copy(types[0], "file", err);
 	
-	bindf(table, StopFile, "stopfile", types, err);
+	types[3] = 0;
 	
-	set(types, 2, err);
+	copy(types[0], "sequence", err);
+	copy(types[1], "number", err);
+	copy(types[2], "number", err);
+	
+	bindf(table, Get, "get", types, err);
+	bindf(table, Insert, "insert", types, err);
+	
+	
+	
+	types[2] = 0;
 	
 	copy(types[0], "sequence", err);
 	copy(types[1], "number", err);
@@ -211,21 +332,34 @@ void binds(HTable &table)
 	bindf(table, finputnum, "input", types, err);
 	bindf(table, fprintnum, "print", types, err);
 	
-	set(types, 3, err);
+	copy(types[0], "sequence", err);
+	
+	bindf(table, finputseq, "input", types, err);
+	bindf(table, fprintseq, "print", types, err);
+	
+	
+	
+	
+	types[1] = 0;
+	
+	copy(types[0], "number", err);
+	
+	bindf(table, printnum, "print", types, err);
+	bindf(table, inputnum, "input", types, err);
+	
+	copy(types[0], "file", err);
+	
+	bindf(table, StopFile, "stopfile", types, err);
 	
 	copy(types[0], "sequence", err);
-	copy(types[1], "number", err);
-	copy(types[2], "number", err);
 	
-	bindf(table, Get, "get", types, err);
-	bindf(table, Insert, "insert", types, err);
+	bindf(table, inputseq, "input", types, err);
+	bindf(table, printseq, "print", types, err);
 	
-	set(types, 4, err);
 	
-	copy(types[0], "sequence", err);
-	copy(types[1], "sequence", err);
-	copy(types[2], "number", err);
-	copy(types[3], "number", err);
 	
-	bindf(table, GetSubS, "getsubs", types, err);
+	
+	types[0] = 0;
+	
+	bindf(table, bTest1, "test1", types, err);
 }

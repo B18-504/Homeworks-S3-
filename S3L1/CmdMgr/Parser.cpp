@@ -216,7 +216,11 @@ void finput(wordlist &a, FILE *fstream, char &err)						//1 - слишком д�
 
 void finput(char **&p, FILE *fstream, unsigned char &length, char &err)	//1 - слишком длинное слово
 {																		//2 - файл закончился
-	wordlist a;															//3 - слишком много слов
+	if(!bool(fstream))													//3 - слишком много слов
+	{
+		throw FSE();
+	}
+	wordlist a;
 	finput(a, fstream, err);
 	length = a.l;
 	if (!err)

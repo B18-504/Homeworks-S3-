@@ -25,6 +25,11 @@ private:
 	Node *first = 0;
 	Node *last = 0;
 	
+	void ShiftPtrRight(void *&ptr, uint &position) override;
+	void ShiftPtrLeft(void *&ptr, uint &position) override;
+	T *GetVal(void *ptr) override;
+	void SetVal(T *val, void *ptr) override;
+	
 public:
 	List() = default;
 	
@@ -37,19 +42,15 @@ public:
 	void Append(T *value) override;
 	void Prepend(T *value) override;
 	void Insert(T *value, uint index) override;
-	void Remove(T *value) override;
 	
-	~List()
-	{
-		Node *tmp = first;
-		Node *next = 0;
-		while(tmp)
-		{
-			next = tmp->next;
-			delete tmp;
-			tmp = next;
-		}
-	}
+	void Remove(T *value) override;
+	void Clear() override;
+	
+	void SetFromStr(char **values, uint length) override;
+	
+	typename Sequence<T>::Slider &InitSlider(uint initpos) override;
+	
+	~List();
 };
 
 #include "List.cpp"

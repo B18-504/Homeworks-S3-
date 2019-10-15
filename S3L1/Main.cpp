@@ -2,7 +2,7 @@
 
 #include "stdlib.h"
 #include "stdio.h"
-#include <typeinfo>
+#include "time.h"
 
 #include "Exceptions.h"
 
@@ -13,8 +13,6 @@
 #include "IO.cpp"														
 #include "Test.cpp"
 #include "CmdBinds.cpp"
-
-using namespace std;
 
 int main()
 {

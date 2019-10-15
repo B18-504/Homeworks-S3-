@@ -5,6 +5,11 @@ Int::Int(int a)
 	body = a;
 }
 
+void Int::SetRandVal()
+{
+	body = rand();
+}
+
 double Int::ValueAsDbl()
 {
 	return double(body);
@@ -41,6 +46,11 @@ Number *(Int::Clone)()
 Uint::Uint(uint a)
 {
 	body = a;
+}
+
+void Uint::SetRandVal()
+{
+	body = rand();
 }
 
 double Uint::ValueAsDbl()
@@ -82,6 +92,11 @@ Double::Double(double a)
 	body = a;
 }
 
+void Double::SetRandVal()
+{
+	body = rand();
+}
+
 double Double::ValueAsDbl()
 {
 	return double(body);
@@ -119,6 +134,11 @@ Number *(Double::Clone)()
 Bool::Bool(bool a)
 {
 	body = a;
+}
+
+void Bool::SetRandVal()
+{
+	body = rand();
 }
 
 double Bool::ValueAsDbl()
@@ -168,4 +188,38 @@ bool operator==(Number &a, Number &b)
 bool operator>(Number &a, Number &b)
 {
 	return(a.ValueAsDbl() > b.ValueAsDbl());
+}
+
+template <typename T>
+char LessOrEquals(Number &a, Number &b)
+{
+	if(((T*)(&a))->body < ((T*)(&b))->body)
+	{
+		return 1;
+	}
+	else if(((T*)(&a))->body > ((T*)(&b))->body)
+	{
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+template <typename T>
+bool GreatOrEquals(Number &a, Number &b)
+{
+	if(((T*)(&a))->body > ((T*)(&b))->body)
+	{
+		return 1;
+	}
+	else if(((T*)(&a))->body < ((T*)(&b))->body)
+	{
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
 }
