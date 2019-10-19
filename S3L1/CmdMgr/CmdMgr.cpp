@@ -1,12 +1,16 @@
 #pragma once
 
-void getcmd(HTable &table, bool &finish)
+#include <chrono>
+
+void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
 {
 	printf("--> ");
 	
 	char **p;
 	unsigned char argc;
 	char err;
+
+	std::chrono::time_point<std::chrono::system_clock> start, end;
 	
 	
 	input(p, argc, err);
@@ -29,6 +33,28 @@ void getcmd(HTable &table, bool &finish)
 		if(finish)
 		{
 			return;
+		}
+
+		bool time_submission;
+		cmp(*p, "-t", time_submission);
+		if(time_submission)
+		{
+			++p;
+			if(argc != 1)
+			{
+				--argc;
+			}
+			else
+			{
+				printf("Executing empty call time submission\n");
+				start = std::chrono::system_clock::now();
+				end = std::chrono::system_clock::now();
+				uint msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+				printf("%u\n", msec);
+				--p;
+				free(p);
+				return;
+			}
 		}
 		
 		
@@ -79,8 +105,21 @@ void getcmd(HTable &table, bool &finish)
 					++p;
 				}
 				
+
 				void (*f)(binding **&, unsigned char) = function->ptr;
-				f(argv, argc);
+				if(time_submission)
+				{
+					start = std::chrono::system_clock::now();
+					f(argv, argc);
+					end = std::chrono::system_clock::now();
+					uint msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+					printf("%u\n", msec);
+				}
+				else
+				{
+					f(argv, argc);
+				}
+				
 				
 				c = argv;
 				free((*c)->type);
@@ -136,7 +175,18 @@ void getcmd(HTable &table, bool &finish)
 			find(*(Overrides*)(function->ptr), f, types, err);
 			if(!err)
 			{
-				f(argv);
+				if(time_submission)
+				{
+					start = std::chrono::system_clock::now();
+					f(argv);
+					end = std::chrono::system_clock::now();
+					uint msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+					printf("%u\n", msec);
+				}
+				else
+				{
+					f(argv);
+				}
 			}
 			else
 			{
@@ -144,6 +194,10 @@ void getcmd(HTable &table, bool &finish)
 			}
 			
 		}
+		if(time_submission)
+		{
+			--p;
+		}
+		//free(p);
 	}
-	return;
 }

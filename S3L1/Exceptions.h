@@ -2,11 +2,9 @@
 
 class Exception
 {
-protected:
-	char *message;
-	
 public:
 	unsigned int code;
+	char *message;
 	
 	Exception()
 	{
@@ -14,17 +12,10 @@ public:
 		message = "What a wierd exception";
 	}
 
-private:
 	Exception(unsigned char code, char *message)
 	{
 		this->code = code;
 		this->message = message;
-	}
-
-public:
-	void alert()
-	{
-		printf("%s\n", message);
 	}
 };
 
@@ -148,6 +139,16 @@ public:
 	}
 };
 
+class Strong_Name_Redefinition : public Exception
+{
+public:
+	Strong_Name_Redefinition()
+	{
+		Exception::code = 0x1c;
+		Exception::message = "Can't redefine strong names (weak names are in To Be Done)";
+	}
+};
+
 typedef Max_Size_Reached MSR;
 typedef Mem_Alloc_Error MAE;
 typedef Out_of_Range OoR;
@@ -160,3 +161,4 @@ typedef Bad_String_Format BSF;
 typedef File_Stream_Error FSE;
 typedef Slider_Is_Unbound SIU;
 typedef Null_Ptr_Exception NPE;
+typedef Strong_Name_Redefinition SNR;

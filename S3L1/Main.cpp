@@ -14,18 +14,20 @@
 #include "Test.cpp"
 #include "CmdBinds.cpp"
 
+
 int main()
 {
+	srand(time(0));
+
 	HTable table;
 	init(table);
-	binds(table);
 	try
 	{
 		binds(table);
 	}
 	catch(Exception E)
 	{
-		E.alert();
+		printf("%s\n", E.message);
 		return 1;
 	}
 	bool finish = 0;
@@ -37,7 +39,7 @@ int main()
 		}
 		catch(Exception E)
 		{
-			E.alert();
+			printf("%s\n", E.message);
 		}
 	}
 	return 0;

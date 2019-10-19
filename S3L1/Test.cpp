@@ -2,14 +2,14 @@
 
 #include "TestMacro.h"
 
-void Test1()
+void TestSequence()
 {
 	Result res;
 	res.passed = 0;
 	res.total = 0;
 	
-	Sequence<Number> *arr = new Array<Number>;
-	Sequence<Number> *list = new List<Number>;
+	Sequence<Number> *arr = new ArraySequence<Number>;
+	Sequence<Number> *list = new ListSequence<Number>;
 	
 	REQUIRE(arr->GetLen() == 0, res);//1
 	REQUIRE(list->GetLen() == 0, res);//2

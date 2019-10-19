@@ -64,26 +64,20 @@ void Sequence<T>::SliderList::Unbind()
 template <typename T>													
 Sequence<T>::Slider::~Slider()
 {
-	if(((typename SliderList::SliderNode*)node)->next)
-	{
-		((typename SliderList::SliderNode*)node)->next->prev = ((typename SliderList::SliderNode*)node)->prev;
-	}
-	else
-	{
-		master->SList.last = ((typename SliderList::SliderNode*)node)->prev;
-	}
-	if(((typename SliderList::SliderNode*)node)->prev)
-	{
-		((typename SliderList::SliderNode*)node)->prev->next = ((typename SliderList::SliderNode*)node)->next;
-	}
-	else
-	{
-		master->SList.first = ((typename SliderList::SliderNode*)node)->next;
-	}
+	Unbind();
 }
 
 template <typename T>
-T *(Sequence<T>::Slider::GetVal)()
+typename Sequence<T>::Slider &(Sequence<T>::Slider::Clone)() const
+{
+	Sequence<T>::Slider &sl = master->InitSlider(0);
+	sl.position = position;
+	sl.ptr = ptr;
+	return sl;
+}
+
+template <typename T>
+T *(Sequence<T>::Slider::GetVal)() const
 {
 	if(!master)
 	{
@@ -93,9 +87,15 @@ T *(Sequence<T>::Slider::GetVal)()
 }
 
 template <typename T>
-void Sequence<T>::Slider::SetVal(T *a)
+void Sequence<T>::Slider::SetVal(T *a) const
 {
 	master->SetVal(a, ptr);
+}
+
+template <typename T>
+uint Sequence<T>::Slider::GetPosition() const
+{
+	return position;
 }
 
 template <typename T>
@@ -119,7 +119,7 @@ void (Sequence<T>::Slider::ShiftRight())
 }
 
 template <typename T>
-bool Sequence<T>::Slider::IsBound()
+bool Sequence<T>::Slider::IsBound() const
 {
 	return bool(master);
 }

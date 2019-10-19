@@ -174,6 +174,12 @@ Number *(Bool::Clone)()
 }
 
 
+Number *RandInt()
+{
+	return new Int(rand());
+}
+
+
 
 
 
@@ -208,7 +214,7 @@ char LessOrEquals(Number &a, Number &b)
 }
 
 template <typename T>
-bool GreatOrEquals(Number &a, Number &b)
+char GreatOrEquals(Number &a, Number &b)
 {
 	if(((T*)(&a))->body > ((T*)(&b))->body)
 	{
@@ -222,4 +228,9 @@ bool GreatOrEquals(Number &a, Number &b)
 	{
 		return -1;
 	}
+}
+
+void dummyF()
+{
+	GreatOrEquals<Int>(*RandInt(), *RandInt());
 }

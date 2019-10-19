@@ -4,7 +4,14 @@
 
 void printnum(void ***argv)
 {
-	printf("%s\n", ((Number*)(**argv))->ValueAsStr());
+	if(**argv)
+	{
+		printf("%s\n", ((Number*)(**argv))->ValueAsStr());
+	}
+	else
+	{
+		throw NPE();
+	}
 }
 
 void inputnum(void ***argv)
@@ -25,7 +32,14 @@ void inputnum(void ***argv)
 
 void fprintnum(void ***argv)
 {
-	fprintf((FILE*)(*(argv[1])), "%s\n", ((Number*)(*(argv[0])))->ValueAsStr());
+	if(*(argv[0]))
+	{
+		fprintf((FILE*)(*(argv[1])), "%s\n", ((Number*)(*(argv[0])))->ValueAsStr());
+	}
+	else
+	{
+		throw NPE();
+	}
 }
 
 void finputnum(void ***argv)
@@ -151,6 +165,18 @@ M:			fprintf((FILE*)(*(argv[1])), "%s ", sl.GetVal()->ValueAsStr());					//бе�
 	}
 }
 
+void randinputseq(void ***argv)
+{
+	if(*(argv[2]))
+	{
+		((Sequence<Number>*)(*(argv[0])))->SetRandVals(*(argv[1]), ((Number*)(*(argv[2])))->ValueAsUint());
+	}
+	else
+	{
+		throw NPE();
+	}
+}
+
 
 
 
@@ -167,6 +193,18 @@ void IsEmpty(void ***argv)
 	delete (Number*)(*(argv[1]));
 	*(argv[1]) = new Bool;
 	((Bool*)(*(argv[1])))->body = ((Sequence<Number>*)(*(argv[0])))->IsEmpty();
+}
+
+void IsSorted(void ***argv)
+{
+	delete (Number*)(*(argv[2]));
+	*(argv[2]) = new Bool;
+	((Bool*)(*(argv[2])))->body = ((Sequence<Number>*)(*(argv[0])))->IsSorted(((char (*)(Number&, Number&))(*(argv[1]))));
+}
+
+void QuickSort(void ***argv)
+{
+	QuickSort(*(Sequence<Number>*)(*(argv[0])), ((char (*)(Number&, Number&))(*(argv[1]))));
 }
 
 void Get(void ***argv)
@@ -226,9 +264,9 @@ void GetSubS(void ***argv)
 
 
 
-void bTest1(void ***)
+void TestSequence(void ***)
 {
-	Test1();
+	TestSequence();
 }
 
 
@@ -281,7 +319,7 @@ void binds(HTable &table)
 																		
 	bindvt(table, "sequence", err);										
 	bindit(table, "array", "sequence", generateArray, err);
-	bindit(table, "list", "sequence", generateList, err);				//Привязка виртуальных типов через специальный интерфейс
+	bindit(table, "list", "sequence", generateListSequence, err);				//Привязка виртуальных типов через специальный интерфейс
 																		//Создание возможно ТОЛЬКО указанием имплементирующего типа
 	char **types;
 	
@@ -302,8 +340,16 @@ void binds(HTable &table)
 	copy(types[1], "number", err);
 	copy(types[2], "number", err);
 	
-	bindf(table, Get, "get", types, err);
-	bindf(table, Insert, "insert", types, err);
+	bindf(table, Get, "Get", types, err);
+	bindf(table, Insert, "Insert", types, err);
+
+	copy(types[1], "numbergenerator", err);
+
+	bindf(table, randinputseq, "SetRand", types, err);
+
+	copy(types[1], "cmp", err);
+
+	bindf(table, IsSorted, "IsSorted", types, err);
 	
 	
 	
@@ -312,30 +358,34 @@ void binds(HTable &table)
 	copy(types[0], "sequence", err);
 	copy(types[1], "number", err);
 	
-	bindf(table, GetLen, "getlen", types, err);
-	bindf(table, IsEmpty, "isempty", types, err);
-	bindf(table, GetFirst, "getfirst", types, err);
-	bindf(table, GetLast, "getlast", types, err);
-	bindf(table, Append, "append", types, err);
-	bindf(table, Prepend, "prepend", types, err);
-	bindf(table, Remove, "remove", types, err);
+	bindf(table, GetLen, "GetLen", types, err);
+	bindf(table, IsEmpty, "IsEmpty", types, err);
+	bindf(table, GetFirst, "GetFirst", types, err);
+	bindf(table, GetLast, "GetLast", types, err);
+	bindf(table, Append, "Append", types, err);
+	bindf(table, Prepend, "Prepend", types, err);
+	bindf(table, Remove, "Remove", types, err);
+
+	copy(types[1], "cmp", err);
+
+	bindf(table, (void (*)(void***))QuickSort, "QuickSort", types, err);
 	
 	copy(types[0], "file", err);
 	copy(types[1], "input", err);
 	
-	bindf(table, StartInFile, "startinfile", types, err);
-	bindf(table, StartOutFile, "startoutfile", types, err);
+	bindf(table, StartInFile, "StartInFile", types, err);
+	bindf(table, StartOutFile, "StartOutFile", types, err);
 	
 	copy(types[0], "number", err);
 	copy(types[1], "file", err);
 	
-	bindf(table, finputnum, "input", types, err);
-	bindf(table, fprintnum, "print", types, err);
+	bindf(table, finputnum, "Input", types, err);
+	bindf(table, fprintnum, "Print", types, err);
 	
 	copy(types[0], "sequence", err);
 	
-	bindf(table, finputseq, "input", types, err);
-	bindf(table, fprintseq, "print", types, err);
+	bindf(table, finputseq, "Input", types, err);
+	bindf(table, fprintseq, "Print", types, err);
 	
 	
 	
@@ -344,22 +394,27 @@ void binds(HTable &table)
 	
 	copy(types[0], "number", err);
 	
-	bindf(table, printnum, "print", types, err);
-	bindf(table, inputnum, "input", types, err);
+	bindf(table, printnum, "Print", types, err);
+	bindf(table, inputnum, "Input", types, err);
 	
 	copy(types[0], "file", err);
 	
-	bindf(table, StopFile, "stopfile", types, err);
+	bindf(table, StopFile, "StopFile", types, err);
 	
 	copy(types[0], "sequence", err);
 	
-	bindf(table, inputseq, "input", types, err);
-	bindf(table, printseq, "print", types, err);
+	bindf(table, inputseq, "Input", types, err);
+	bindf(table, printseq, "Print", types, err);
 	
 	
 	
 	
 	types[0] = 0;
 	
-	bindf(table, bTest1, "test1", types, err);
+	bindf(table, (void (*)())TestSequence, "TestSequence", types, err);
+
+
+
+	bind(table, RandInt, "randint", "numbergenerator", err);
+	bind(table, (char (*)(Number&, Number&))LessOrEquals<Int>, "lessoreq", "cmp", err);
 }

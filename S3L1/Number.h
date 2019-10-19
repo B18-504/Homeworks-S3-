@@ -87,4 +87,12 @@ public:
 	char *ValueAsStr() override;
 };
 
+Number *RandInt();
+
+template <typename T>
+char LessOrEquals(Number &a, Number &b);
+
+template <typename T>
+char GreatOrEquals(Number &a, Number &b);
+
 #include "Number.cpp"
