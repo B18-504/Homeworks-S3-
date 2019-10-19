@@ -1,13 +1,13 @@
 #pragma once
 
 template <typename T>
-uint Sequence<T>::GetLen()
+uint Sequence<T>::GetLen() const
 {
 	return len;
 }
 
 template <typename T>
-bool Sequence<T>::IsEmpty()
+bool Sequence<T>::IsEmpty() const
 {
 	return !len;
 }
@@ -19,12 +19,11 @@ Sequence<T>::~Sequence()
 }
 
 template <typename T>
-bool Sequence<T>::IsSorted(char comparison(T &a, T &b))
+bool Sequence<T>::IsSorted(char comparison(T &a, T &b)) const
 {
 	bool result = 1;
 	if(len > 1)
 	{
-		RecoverSliders();
 		T *current = (*this)[0], *next = (*this)[1];
 		Slider &sl = InitSlider(1);
 		try
