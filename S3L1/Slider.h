@@ -13,20 +13,23 @@ private:
 	
 	void Unbind();
 public:
-	T *GetVal();
-	void SetVal(T *a);
+	Slider &Clone() const;
+
+	T *GetVal() const;
+	void SetVal(T *a) const;
+	uint GetPosition() const;
 	
 	void ShiftRight();
 	void ShiftLeft();
 	
-	bool IsBound();
+	bool IsBound() const;
 	
 	~Slider();
 	
 	friend class SliderList;
 	friend class Sequence<T>;
-	friend class Array<T>;
-	friend class List<T>;
+	friend class ArraySequence<T>;
+	friend class ListSequence<T>;
 };
 
 template <typename T>

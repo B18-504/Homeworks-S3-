@@ -1,7 +1,7 @@
 #pragma once
 
 template <typename T>
-T *(List<T>::operator [])(uint index)
+T *(ListSequence<T>::operator [])(uint index) const
 {
 	if(index < Sequence<T>::len)
 	{
@@ -19,7 +19,7 @@ T *(List<T>::operator [])(uint index)
 }
 
 template <typename T>
-T *(List<T>::GetFirst)()
+T *(ListSequence<T>::GetFirst)() const
 {
 	if(Sequence<T>::len)
 	{
@@ -32,7 +32,7 @@ T *(List<T>::GetFirst)()
 }
 
 template <typename T>
-T *(List<T>::GetLast)()
+T *(ListSequence<T>::GetLast)() const
 {
 	if(Sequence<T>::len)
 	{
@@ -45,7 +45,7 @@ T *(List<T>::GetLast)()
 }
 
 template <typename T>
-void List<T>::Append(T *value)
+void ListSequence<T>::Append(T *value)
 {
 	if(Sequence<T>::len == -1u)
 	{
@@ -65,7 +65,7 @@ void List<T>::Append(T *value)
 }
 
 template <typename T>
-void List<T>::Prepend(T *value)
+void ListSequence<T>::Prepend(T *value)
 {
 	if(Sequence<T>::len == -1u)
 	{
@@ -86,7 +86,7 @@ void List<T>::Prepend(T *value)
 }
 
 template <typename T>
-void List<T>::Insert(T *value, uint index)
+void ListSequence<T>::Insert(T *value, uint index)
 {
 	if(index > Sequence<T>::len)
 	{
@@ -119,7 +119,7 @@ void List<T>::Insert(T *value, uint index)
 }
 
 template <typename T>
-void List<T>::Remove(T *value)
+void ListSequence<T>::Remove(T *value)
 {
 	uint i = 0;
 	bool found = 0;
@@ -147,7 +147,7 @@ void List<T>::Remove(T *value)
 }
 
 template <typename T>
-void List<T>::Clear()
+void ListSequence<T>::Clear()
 {
 	Node *tmp = first;
 	Node *next = 0;
@@ -163,11 +163,11 @@ void List<T>::Clear()
 }
 
 template <typename T>
-Sequence<T> *(List<T>::GetSubS)(uint start, uint end)
+Sequence<T> *(ListSequence<T>::GetSubS)(uint start, uint end) const
 {
 	if(end < Sequence<T>::len)
 	{
-		List<T> *result = new List<T>;
+		ListSequence<T> *result = new ListSequence<T>;
 		Node *tmp = first;
 		uint i = 0;
 		
@@ -190,7 +190,7 @@ Sequence<T> *(List<T>::GetSubS)(uint start, uint end)
 }
 
 template <typename T>
-void List<T>::SetFromStr(char **values, uint length)
+void ListSequence<T>::SetFromStr(char **values, uint length)
 {
 	Node *tmp;
 	while(first)
@@ -209,11 +209,30 @@ void List<T>::SetFromStr(char **values, uint length)
 }
 
 template <typename T>
-typename Sequence<T>::Slider &(List<T>::InitSlider)(uint initpos)
+void ListSequence<T>::SetRandVals(T *(*generator)(), uint length)
+{
+	Node *tmp;
+	while(first)
+	{
+		tmp = first->next;
+		delete first;
+		first = tmp;
+	}
+	last = 0;
+	Sequence<T>::len = 0;
+	
+	for(uint i = 0; i < length; i++)
+	{
+		Append(generator());
+	}
+}
+
+template <typename T>
+typename Sequence<T>::Slider &(ListSequence<T>::InitSlider)(uint initpos) const
 {
 	if(initpos < Sequence<T>::len)
 	{
-		List<T>::Node *nd;
+		ListSequence<T>::Node *nd;
 		if(initpos < Sequence<T>::len)
 		{
 			nd = first;
@@ -242,11 +261,11 @@ typename Sequence<T>::Slider &(List<T>::InitSlider)(uint initpos)
 
 
 template <typename T>
-void List<T>::ShiftPtrRight(void  *&ptr, uint &position)
+void ListSequence<T>::ShiftPtrRight(void  *&ptr, uint &position) const
 {
 	if(((position + 1) < Sequence<T>::len) * (position != -1u))
 	{
-		ptr = ((List<T>::Node*)ptr)->next;
+		ptr = ((ListSequence<T>::Node*)ptr)->next;
 		++position;
 	}
 	else
@@ -256,11 +275,11 @@ void List<T>::ShiftPtrRight(void  *&ptr, uint &position)
 }
 
 template <typename T>
-void List<T>::ShiftPtrLeft(void  *&ptr, uint &position)
+void ListSequence<T>::ShiftPtrLeft(void  *&ptr, uint &position) const
 {
 	if(position != 0)
 	{
-		ptr = ((List<T>::Node*)ptr)->prev;
+		ptr = ((ListSequence<T>::Node*)ptr)->prev;
 		--position;
 	}
 	else
@@ -270,19 +289,19 @@ void List<T>::ShiftPtrLeft(void  *&ptr, uint &position)
 }
 
 template <typename T>
-T *(List<T>::GetVal)(void *ptr)
+T *(ListSequence<T>::GetVal)(void *ptr) const
 {
 	return ((Node*)ptr)->body;
 }
 
 template <typename T>
-void List<T>::SetVal(T *val, void *ptr)
+void ListSequence<T>::SetVal(T *val, void *ptr) const
 {
-	((List<T>::Node*)ptr)->body = val;
+	((ListSequence<T>::Node*)ptr)->body = val;
 }
 
 template <typename T>
-List<T>::~List()
+ListSequence<T>::~ListSequence()
 {
 	Node *tmp = first;
 	Node *next = 0;

@@ -1,7 +1,7 @@
 #pragma once
 
 template <typename T>
-void Array<T>::extend()
+void ArraySequence<T>::extend()
 {
 	if (allocated_bytes == 0)
 	{
@@ -34,7 +34,7 @@ void Array<T>::extend()
 }
 
 template <typename T>
-T *(Array<T>::operator[])(uint index)
+T *(ArraySequence<T>::operator[])(uint index) const
 {
 	if(index < Sequence<T>::len)
 	{
@@ -47,7 +47,7 @@ T *(Array<T>::operator[])(uint index)
 }
 
 template <typename T>
-T *(Array<T>::GetFirst)()
+T *(ArraySequence<T>::GetFirst)() const
 {
 	if(Sequence<T>::len)
 	{
@@ -60,7 +60,7 @@ T *(Array<T>::GetFirst)()
 }
 
 template <typename T>
-T *(Array<T>::GetLast)()
+T *(ArraySequence<T>::GetLast)() const
 {
 	if(Sequence<T>::len)
 	{
@@ -73,7 +73,7 @@ T *(Array<T>::GetLast)()
 }
 
 template <typename T>
-void Array<T>::Append(T *value)
+void ArraySequence<T>::Append(T *value)
 {
 	ulint l = Sequence<T>::len;
 	++l;
@@ -86,7 +86,7 @@ void Array<T>::Append(T *value)
 }
 
 template <typename T>
-void Array<T>::Prepend(T *value)
+void ArraySequence<T>::Prepend(T *value)
 {
 	ulint l = Sequence<T>::len;
 	++l;
@@ -104,7 +104,7 @@ void Array<T>::Prepend(T *value)
 }
 
 template <typename T>
-void Array<T>::Insert(T *value, uint index)
+void ArraySequence<T>::Insert(T *value, uint index)
 {
 	if(index > Sequence<T>::len)
 	{
@@ -127,7 +127,7 @@ void Array<T>::Insert(T *value, uint index)
 }
 
 template <typename T>
-void Array<T>::Remove(T *value)
+void ArraySequence<T>::Remove(T *value)
 {
 	uint i = 0;
 	bool found = 0;
@@ -154,7 +154,7 @@ void Array<T>::Remove(T *value)
 }
 
 template <typename T>
-void Array<T>::Clear()
+void ArraySequence<T>::Clear()
 {
 	free(body);
 	body = 0;
@@ -163,11 +163,11 @@ void Array<T>::Clear()
 }
 
 template <typename T>
-Sequence<T> *(Array<T>::GetSubS)(uint start, uint end)
+Sequence<T> *(ArraySequence<T>::GetSubS)(uint start, uint end) const
 {
 	if(end < Sequence<T>::len)
 	{
-		Array<T> *result = new Array<T>;
+		ArraySequence<T> *result = new ArraySequence<T>;
 		for(uint i = start; i <= end; i++)
 		{
 			result->Append(body[i]);
@@ -181,7 +181,7 @@ Sequence<T> *(Array<T>::GetSubS)(uint start, uint end)
 }
 
 template <typename T>
-void Array<T>::SetFromStr(char **values, uint length)
+void ArraySequence<T>::SetFromStr(char **values, uint length)
 {
 	free(body);
 	allocated_bytes = 0;
@@ -202,7 +202,28 @@ void Array<T>::SetFromStr(char **values, uint length)
 }
 
 template <typename T>
-typename Sequence<T>::Slider &(Array<T>::InitSlider)(uint initpos)
+void ArraySequence<T>::SetRandVals(T *(*generator)(), uint length)
+{
+	free(body);
+	allocated_bytes = 0;
+	Sequence<T>::len = 0;
+	
+	while(allocated_bytes < length*sizeof(T*))
+	{
+		extend();
+	}
+	Sequence<T>::len = length;
+	
+	T **tmp = body;
+	
+	for(uint i = 0; i < length; i++)
+	{
+		*(tmp++) = generator();
+	}
+}
+
+template <typename T>
+typename Sequence<T>::Slider &(ArraySequence<T>::InitSlider)(uint initpos) const
 {
 	if(initpos < Sequence<T>::len)
 	{
@@ -217,7 +238,7 @@ typename Sequence<T>::Slider &(Array<T>::InitSlider)(uint initpos)
 }
 
 template <typename T>
-void Array<T>::ShiftPtrRight(void  *&ptr, uint &position)
+void ArraySequence<T>::ShiftPtrRight(void  *&ptr, uint &position) const
 {
 	if(((position + 1) < Sequence<T>::len) * (position != -1u))
 	{
@@ -231,7 +252,7 @@ void Array<T>::ShiftPtrRight(void  *&ptr, uint &position)
 }
 
 template <typename T>
-void Array<T>::ShiftPtrLeft(void  *&ptr, uint &position)
+void ArraySequence<T>::ShiftPtrLeft(void  *&ptr, uint &position) const
 {
 	if(position != 0)
 	{
@@ -245,19 +266,19 @@ void Array<T>::ShiftPtrLeft(void  *&ptr, uint &position)
 }
 
 template <typename T>
-T *(Array<T>::GetVal)(void *ptr)
+T *(ArraySequence<T>::GetVal)(void *ptr) const
 {
 	return *(T**)ptr;
 }
 
 template <typename T>
-void Array<T>::SetVal(T *val, void *ptr)
+void ArraySequence<T>::SetVal(T *val, void *ptr) const
 {
 	*((T**)ptr) = val;
 }
 
 template <typename T>
-Array<T>::~Array()
+ArraySequence<T>::~ArraySequence()
 {
 	free(body);
 }
