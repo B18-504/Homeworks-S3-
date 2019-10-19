@@ -2,10 +2,10 @@
 
 Sequence<Number> *generateArray()
 {
-	return new Array<Number>;
+	return new ArraySequence<Number>;
 }
 
-Sequence<Number> *generateList()
+Sequence<Number> *generateListSequence()
 {
-	return new List<Number>;
+	return new ListSequence<Number>;
 }
