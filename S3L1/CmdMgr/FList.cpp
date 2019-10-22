@@ -16,11 +16,9 @@ void find(Overrides &o, void (*&function)(void***), char **types, char &err)	//1
 {
 	Override *ov = o.head, *op;
 	err = 1;
-	bool b;
 	while(bool(err)*bool(ov))
 	{
-		cmp(types, ov->types, b);
-		err = !b;
+		err = !cmp(types, ov->types);
 		op = ov;
 		ov = ov->next;
 	}
@@ -39,7 +37,6 @@ void bindf(HTable &table, void *function, char *key, char **types, char &err)	//
 {																		//2 - имя занято переменной или внутренней функцией (пока что нельзя перегружать внутренние обычными)
 	binding *pb;														//3 - перегрузка с данными типами уже существует
 	find(table, pb, key, err);
-	bool b;
 	Override *po;
 	if(err == 2)
 	{
@@ -54,8 +51,7 @@ void bindf(HTable &table, void *function, char *key, char **types, char &err)	//
 	}
 	else
 	{
-		cmp(pb->type, "f", b);
-		if(b)
+		if(cmp(pb->type, "f"))
 		{
 			po = pb->ptr;
 		}
@@ -68,8 +64,7 @@ void bindf(HTable &table, void *function, char *key, char **types, char &err)	//
 	while((bool(po->next))*(!err))														
 	{
 		po = po->next;
-		cmp(po->types, types, b);
-		if(b)
+		if(cmp(po->types, types))
 		{
 			err = 3;
 			return;

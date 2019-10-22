@@ -19,10 +19,10 @@ public:
 	}
 };
 
-class Max_Size_Reached : public Exception
+class Max_Capacity_Exceeded : public Exception
 {
 public:
-	Max_Size_Reached()
+	Max_Capacity_Exceeded()
 	{
 		Exception::code = 0x10;
 		Exception::message = "Could not extend array - max size reached";
@@ -105,7 +105,7 @@ public:
 	Bad_String_Format()
 	{
 		Exception::code = 0x18;
-		Exception::message = "String-to-type conversion failed: bad string format";
+		Exception::message = "Bad string format or string is too long";
 	}
 };
 
@@ -145,11 +145,21 @@ public:
 	Strong_Name_Redefinition()
 	{
 		Exception::code = 0x1c;
-		Exception::message = "Can't redefine strong names (weak names are in To Be Done)";
+		Exception::message = "Can't redefine/delete strong names";
 	}
 };
 
-typedef Max_Size_Reached MSR;
+class Negative_Length_Exception : public Exception
+{
+public:
+	Negative_Length_Exception()
+	{
+		Exception::code = 0x1d;
+		Exception::message = "Length (aka containers cap) can't be negative";
+	}
+};
+
+typedef Max_Capacity_Exceeded MCE;
 typedef Mem_Alloc_Error MAE;
 typedef Out_of_Range OoR;
 typedef Container_Is_Empty CIE;
@@ -162,3 +172,4 @@ typedef File_Stream_Error FSE;
 typedef Slider_Is_Unbound SIU;
 typedef Null_Ptr_Exception NPE;
 typedef Strong_Name_Redefinition SNR;
+typedef Negative_Length_Exception NLE;

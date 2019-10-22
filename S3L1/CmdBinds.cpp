@@ -169,7 +169,7 @@ void randinputseq(void ***argv)
 {
 	if(*(argv[2]))
 	{
-		((Sequence<Number>*)(*(argv[0])))->SetRandVals(*(argv[1]), ((Number*)(*(argv[2])))->ValueAsUint());
+		((Sequence<Number>*)(*(argv[0])))->SetRandVals(*(argv[1]), ((Number*)(*(argv[2])))->ValueAsInt());
 	}
 	else
 	{
@@ -184,8 +184,8 @@ void randinputseq(void ***argv)
 void GetLen(void ***argv)
 {
 	delete (Number*)(*(argv[1]));
-	*(argv[1]) = new Uint;
-	((Uint*)(*(argv[1])))->body = ((Sequence<Number>*)(*(argv[0])))->GetLen();
+	*(argv[1]) = new Int;
+	((Int*)(*(argv[1])))->body = ((Sequence<Number>*)(*(argv[0])))->GetLen();
 }
 
 void IsEmpty(void ***argv)
@@ -207,11 +207,16 @@ void QuickSort(void ***argv)
 	QuickSort(*(Sequence<Number>*)(*(argv[0])), ((char (*)(Number&, Number&))(*(argv[1]))));
 }
 
+void InsertSort(void ***argv)
+{
+	InsertSort(*(Sequence<Number>*)(*(argv[0])), ((char (*)(Number&, Number&))(*(argv[1]))));
+}
+
 void Get(void ***argv)
 {
 	Sequence<Number> *seq = *argv[0];
-	uint u = ((Number*)(*(argv[1])))->ValueAsUint();
-	Number *tmp = (*seq)[u]->Clone();									//arg2 = arg0[arg1]
+	int i = ((Number*)(*(argv[1])))->ValueAsInt();
+	Number *tmp = (*seq)[i]->Clone();									//arg2 = arg0[arg1]
 	delete (Number*)(*(argv[2]));
 	*(argv[2]) = tmp;
 	tmp = 0;
@@ -246,7 +251,7 @@ void Prepend(void ***argv)
 
 void Insert(void ***argv)
 {
-	((Sequence<Number>*)(*(argv[0])))->Insert((Number*)(*(argv[2])), ((Number*)(*(argv[1])))->ValueAsUint());		//arg0.insert(arg2, arg1)
+	((Sequence<Number>*)(*(argv[0])))->Insert((Number*)(*(argv[2])), ((Number*)(*(argv[1])))->ValueAsInt());		//arg0.insert(arg2, arg1)
 }
 
 void Remove(void ***argv)
@@ -256,7 +261,7 @@ void Remove(void ***argv)
 
 void GetSubS(void ***argv)
 {
-	Sequence<Number> *tmp = ((Sequence<Number>*)(*(argv[0])))->GetSubS(((Number*)(*(argv[2])))->ValueAsUint(), ((Number*)(*(argv[3])))->ValueAsUint());	//arg1 = arg1.GetSubS(arg2, arg3)
+	Sequence<Number> *tmp = ((Sequence<Number>*)(*(argv[0])))->GetSubS(((Number*)(*(argv[2])))->ValueAsInt(), ((Number*)(*(argv[3])))->ValueAsInt());	//arg1 = arg1.GetSubS(arg2, arg3)
 	delete (Sequence<Number>*)(*(argv[1]));
 	*(argv[1]) = tmp;
 }
@@ -313,17 +318,17 @@ void binds(HTable &table)
 {
 	char err;
 	
-	bindt(table, "number", sizeof(Number*), err);						//Виртуальные типы можно привязывать как обычные
-	bindt(table, "file", sizeof(FILE*), err);							//Перед использованием СТРОГО необходимо вызвать инициализирующую функцию
+	bindt(table, "number", sizeof(Number*));							//Виртуальные типы можно привязывать как обычные
+	bindt(table, "file", sizeof(FILE*));								//Перед использованием СТРОГО необходимо вызвать инициализирующую функцию
 																		//Тк инициализация объекта абстрактного типа недопустима
 																		
 	bindvt(table, "sequence", err);										
 	bindit(table, "array", "sequence", generateArray, err);
-	bindit(table, "list", "sequence", generateListSequence, err);				//Привязка виртуальных типов через специальный интерфейс
+	bindit(table, "list", "sequence", generateListSequence, err);		//Привязка виртуальных типов через специальный интерфейс
 																		//Создание возможно ТОЛЬКО указанием имплементирующего типа
 	char **types;
 	
-	set(types, 4, err);
+	set(types, 4);
 	
 	copy(types[0], "sequence", err);
 	copy(types[1], "sequence", err);
@@ -369,6 +374,7 @@ void binds(HTable &table)
 	copy(types[1], "cmp", err);
 
 	bindf(table, (void (*)(void***))QuickSort, "QuickSort", types, err);
+	bindf(table, (void (*)(void***))InsertSort, "InsertSort", types, err);
 	
 	copy(types[0], "file", err);
 	copy(types[1], "input", err);
@@ -415,6 +421,12 @@ void binds(HTable &table)
 
 
 
-	bind(table, RandInt, "randint", "numbergenerator", err);
-	bind(table, (char (*)(Number&, Number&))LessOrEquals<Int>, "lessoreq", "cmp", err);
+	bind(table, RandInt, "randint", "numbergenerator");
+	bind(table, RandDouble, "randdouble", "numbergenerator");
+
+	bind(table, (char (*)(Number&, Number&))GreatOrEquals<Int>, "greatoreqint", "cmp");
+	bind(table, (char (*)(Number&, Number&))LessOrEquals<Int>, "lessoreqint", "cmp");
+
+	bind(table, (char (*)(Number&, Number&))GreatOrEquals<Double>, "greatoreqdouble", "cmp");
+	bind(table, (char (*)(Number&, Number&))LessOrEquals<Double>, "lessoreqdouble", "cmp");
 }

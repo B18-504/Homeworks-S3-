@@ -2,10 +2,8 @@
 
 #include <chrono>
 
-void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
-{
-	printf("--> ");
-	
+void getcmd(HTable &table, bool &finish, FILE *script_file = 0)
+{	
 	char **p;
 	unsigned char argc;
 	char err;
@@ -13,7 +11,16 @@ void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
 	std::chrono::time_point<std::chrono::system_clock> start, end;
 	
 	
-	input(p, argc, err);
+	if(script_file)
+	{
+		finput(p, script_file, argc, err);
+	}
+	else
+	{
+		printf("--> ");
+		input(p, argc, err);
+	}
+	
 	
 	if(err == 1)
 	{
@@ -29,14 +36,13 @@ void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
 	
 	if(argc)
 	{
-		cmp(*p, "exit", finish);
+		finish = cmp(*p, "exit");
 		if(finish)
 		{
 			return;
 		}
 
-		bool time_submission;
-		cmp(*p, "-t", time_submission);
+		bool time_submission = cmp(*p, "-t");
 		if(time_submission)
 		{
 			++p;
@@ -49,7 +55,7 @@ void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
 				printf("Executing empty call time submission\n");
 				start = std::chrono::system_clock::now();
 				end = std::chrono::system_clock::now();
-				uint msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+				int msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
 				printf("%u\n", msec);
 				--p;
 				free(p);
@@ -65,12 +71,9 @@ void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
 			printf("function \"%s\" not found\n", *p);
 			return;
 		}		
-		bool b;
-		cmp(function->type, "f", b);
-		if(!b)
+		if(!cmp(function->type, "f"))
 		{
-			cmp(function->type, "ft", b);
-			if(!b)
+			if(!cmp(function->type, "ft"))
 			{
 				printf("function \"%s\" not found\n", *p);
 				return;
@@ -112,7 +115,7 @@ void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
 					start = std::chrono::system_clock::now();
 					f(argv, argc);
 					end = std::chrono::system_clock::now();
-					uint msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+					int msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
 					printf("%u\n", msec);
 				}
 				else
@@ -128,8 +131,7 @@ void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
 				++c;
 				for(unsigned char i = 0; i < (argc - 1); i++)
 				{
-					cmp((*c)->type, "input", b);
-					if(b)
+					if(cmp((*c)->type, "input"))
 					{
 						free((*c)->type);
 						free((*c)->ptr);
@@ -180,7 +182,7 @@ void getcmd(HTable &table, bool &finish, FILE *scriptfile = 0)
 					start = std::chrono::system_clock::now();
 					f(argv);
 					end = std::chrono::system_clock::now();
-					uint msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+					int msec = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
 					printf("%u\n", msec);
 				}
 				else

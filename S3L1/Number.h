@@ -9,7 +9,6 @@ public:
 	
 	virtual double ValueAsDbl() = 0;
 	virtual int ValueAsInt() = 0;
-	virtual uint ValueAsUint() = 0;
 	virtual char *ValueAsStr() = 0;
 	
 	~Number() = default;
@@ -29,25 +28,6 @@ public:
 	
 	double ValueAsDbl() override;
 	int ValueAsInt() override;
-	uint ValueAsUint() override;
-	char *ValueAsStr() override;
-};
-
-class Uint : public Number
-{
-public:
-	uint body;
-	
-	Uint() = default;
-	Uint(uint a);
-	
-	void SetRandVal() override;
-	
-	Number *Clone() override;
-	
-	double ValueAsDbl() override;
-	int ValueAsInt() override;
-	uint ValueAsUint() override;
 	char *ValueAsStr() override;
 };
 
@@ -65,7 +45,6 @@ public:
 	
 	double ValueAsDbl() override;
 	int ValueAsInt() override;
-	uint ValueAsUint() override;
 	char *ValueAsStr() override;
 };
 
@@ -83,11 +62,12 @@ public:
 	
 	double ValueAsDbl() override;
 	int ValueAsInt() override;
-	uint ValueAsUint() override;
 	char *ValueAsStr() override;
 };
 
 Number *RandInt();
+
+Number *RandDouble();
 
 template <typename T>
 char LessOrEquals(Number &a, Number &b);

@@ -20,11 +20,6 @@ int Int::ValueAsInt()
 	return body;
 }
 
-uint Int::ValueAsUint()
-{
-	return uint(body);
-}
-
 char *(Int::ValueAsStr)()
 {
 	char *buff = malloc(50);
@@ -35,49 +30,6 @@ char *(Int::ValueAsStr)()
 Number *(Int::Clone)()
 {
 	return new Int(body);
-}
-
-
-
-
-
-	
-
-Uint::Uint(uint a)
-{
-	body = a;
-}
-
-void Uint::SetRandVal()
-{
-	body = rand();
-}
-
-double Uint::ValueAsDbl()
-{
-	return double(body);
-}
-
-int Uint::ValueAsInt()
-{
-	return int(body);
-}
-
-uint Uint::ValueAsUint()
-{
-	return body;
-}
-
-char *(Uint::ValueAsStr)()
-{
-	char *buff = malloc(50);
-	sprintf(buff, "%u", body);
-	return buff;
-}
-
-Number *(Uint::Clone)()
-{
-	return new Uint(body);
 }
 
 
@@ -105,11 +57,6 @@ double Double::ValueAsDbl()
 int Double::ValueAsInt()
 {
 	return int(body);
-}
-
-uint Double::ValueAsUint()
-{
-	return uint(body);
 }
 
 char *(Double::ValueAsStr)()
@@ -151,11 +98,6 @@ int Bool::ValueAsInt()
 	return int(body);
 }
 
-uint Bool::ValueAsUint()
-{
-	return uint(body);
-}
-
 char *(Bool::ValueAsStr)()
 {
 	if(body)
@@ -179,31 +121,38 @@ Number *RandInt()
 	return new Int(rand());
 }
 
+Number *RandDouble()
+{
+	Double *tmp = new Double;
+	tmp->body = rand();
+	tmp->body *= rand();
+	tmp->body /= rand();
+	return tmp;
+}
 
 
 
 
 
 
-
-bool operator==(Number &a, Number &b)
+bool operator==(Number &a, Number &b)											//DO NOT USE AS COMPARISON FOR SORTS (see sorts.h)
 {
 	return(a.ValueAsDbl() == b.ValueAsDbl());
 }
 
-bool operator>(Number &a, Number &b)
+bool operator>(Number &a, Number &b)											//DO NOT USE AS COMPARISON FOR SORTS
 {
 	return(a.ValueAsDbl() > b.ValueAsDbl());
 }
 
-template <typename T>
+template <typename T>															//To be used as comparison parameters, returns 1, if Less/Greater, -1 if Equal, 0 if neither
 char LessOrEquals(Number &a, Number &b)
 {
-	if(((T*)(&a))->body < ((T*)(&b))->body)
+	if(((T&)a).body < ((T&)b).body)
 	{
 		return 1;
 	}
-	else if(((T*)(&a))->body > ((T*)(&b))->body)
+	else if(((T&)a).body > ((T&)b).body)
 	{
 		return 0;
 	}
@@ -216,11 +165,11 @@ char LessOrEquals(Number &a, Number &b)
 template <typename T>
 char GreatOrEquals(Number &a, Number &b)
 {
-	if(((T*)(&a))->body > ((T*)(&b))->body)
+	if(((T&)a).body > ((T&)b).body)
 	{
 		return 1;
 	}
-	else if(((T*)(&a))->body < ((T*)(&b))->body)
+	else if(((T&)a).body < ((T&)b).body)
 	{
 		return 0;
 	}
@@ -228,9 +177,4 @@ char GreatOrEquals(Number &a, Number &b)
 	{
 		return -1;
 	}
-}
-
-void dummyF()
-{
-	GreatOrEquals<Int>(*RandInt(), *RandInt());
 }

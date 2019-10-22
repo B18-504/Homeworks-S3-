@@ -1,5 +1,5 @@
 template <typename T>
-Sequence<T>::Slider::Slider(Sequence<T> *seq, void *p, uint initpos)
+Sequence<T>::Slider::Slider(Sequence<T> *seq, void *p, int initpos)
 {
 	master = seq;
 	ptr = p;
@@ -93,7 +93,7 @@ void Sequence<T>::Slider::SetVal(T *a) const
 }
 
 template <typename T>
-uint Sequence<T>::Slider::GetPosition() const
+int Sequence<T>::Slider::GetPosition() const
 {
 	return position;
 }

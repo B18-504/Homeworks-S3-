@@ -1,4 +1,4 @@
-#pragma once
+#pragma once																	//would be nice to enhance behavior of extend when need to extend alloc'd memory multiple times
 
 template <typename T>
 void ArraySequence<T>::extend()
@@ -8,14 +8,19 @@ void ArraySequence<T>::extend()
 		allocated_bytes = 8;
 		body = (T**)malloc(8);
 	}
-	else if(allocated_bytes == -1u)
+	else if(allocated_bytes == INT32_MAX)
 	{
-		throw(MSR());
+		throw MCE();
 	}
 	else if(allocated_bytes > (allocated_bytes + allocated_bytes))
 	{
-		allocated_bytes = -1u;
-		body = (T**)realloc(body, -1u);
+		allocated_bytes = INT32_MAX;
+		T **old = body;
+		body = (T**)realloc(body, INT32_MAX);
+		if(old != body)
+		{
+			Sequence<T>::SList.Unbind();
+		}
 	}
 	else
 	{
@@ -29,20 +34,20 @@ void ArraySequence<T>::extend()
 	}
 	if(body == 0)
 	{
-		throw(MAE());
+		throw MAE();
 	}
 }
 
 template <typename T>
-T *(ArraySequence<T>::operator[])(uint index) const
+T *(ArraySequence<T>::operator[])(int index) const
 {
-	if(index < Sequence<T>::len)
+	if((index < Sequence<T>::len) * (index >= 0))
 	{
-		return body[index];
+		return body[index]->Clone();
 	}
 	else
 	{
-		throw(OoR());
+		throw OoR();
 	}
 }
 
@@ -51,11 +56,11 @@ T *(ArraySequence<T>::GetFirst)() const
 {
 	if(Sequence<T>::len)
 	{
-		return *body;
+		return (*body)->Clone();
 	}
 	else
 	{
-		throw(CIE());
+		throw CIE();
 	}
 }
 
@@ -64,20 +69,24 @@ T *(ArraySequence<T>::GetLast)() const
 {
 	if(Sequence<T>::len)
 	{
-		return body[Sequence<T>::len - 1];
+		return body[Sequence<T>::len - 1]->Clone();
 	}
 	else
 	{
-		throw(CIE());
+		throw CIE();
 	}
 }
 
 template <typename T>
 void ArraySequence<T>::Append(T *value)
 {
-	ulint l = Sequence<T>::len;
+	long int l = Sequence<T>::len;
 	++l;
 	l *= sizeof(T*);
+	/*if(l > INT32_MAX)											//seems to be unnecessary, see extend()
+	{
+		throw MCE();
+	}*/
 	while(l > allocated_bytes)
 	{
 		extend();
@@ -88,14 +97,14 @@ void ArraySequence<T>::Append(T *value)
 template <typename T>
 void ArraySequence<T>::Prepend(T *value)
 {
-	ulint l = Sequence<T>::len;
+	long int l = Sequence<T>::len;
 	++l;
 	l *= sizeof(T*);
 	while(l > allocated_bytes)
 	{
 		extend();
 	}
-	for(uint i = Sequence<T>::len; i > 0; i--)
+	for(int i = Sequence<T>::len; i > 0; i--)
 	{
 		body[i] = body[i-1];
 	}
@@ -104,20 +113,20 @@ void ArraySequence<T>::Prepend(T *value)
 }
 
 template <typename T>
-void ArraySequence<T>::Insert(T *value, uint index)
+void ArraySequence<T>::Insert(T *value, int index)
 {
-	if(index > Sequence<T>::len)
+	if((index > Sequence<T>::len) * (index < 0))
 	{
-		throw(OoR());
+		throw OoR();
 	}
-	ulint l = Sequence<T>::len;
+	long int l = Sequence<T>::len;
 	++l;
 	l *= sizeof(T*);
 	while(l > allocated_bytes)
 	{
 		extend();
 	}
-	uint i;
+	int i;
 	for(i = Sequence<T>::len; i > index; i--)
 	{
 		body[i] = body[i - 1];
@@ -129,7 +138,7 @@ void ArraySequence<T>::Insert(T *value, uint index)
 template <typename T>
 void ArraySequence<T>::Remove(T *value)
 {
-	uint i = 0;
+	int i = 0;
 	bool found = 0;
 	while((i < Sequence<T>::len)*(!found))
 	{
@@ -163,12 +172,12 @@ void ArraySequence<T>::Clear()
 }
 
 template <typename T>
-Sequence<T> *(ArraySequence<T>::GetSubS)(uint start, uint end) const
+Sequence<T> *(ArraySequence<T>::GetSubS)(int start, int end) const
 {
-	if(end < Sequence<T>::len)
+	if((end < Sequence<T>::len) * (start >= 0))
 	{
 		ArraySequence<T> *result = new ArraySequence<T>;
-		for(uint i = start; i <= end; i++)
+		for(int i = start; i <= end; i++)
 		{
 			result->Append(body[i]);
 		}
@@ -176,16 +185,24 @@ Sequence<T> *(ArraySequence<T>::GetSubS)(uint start, uint end) const
 	}
 	else
 	{
-		throw(OoR());
+		throw OoR();
 	}
 }
 
 template <typename T>
-void ArraySequence<T>::SetFromStr(char **values, uint length)
+void ArraySequence<T>::SetFromStr(char **values, int length)
 {
-	free(body);
-	allocated_bytes = 0;
-	Sequence<T>::len = 0;
+	if(length < 0)
+	{
+		throw NLE();
+	}
+	long int l = length*sizeof(T*);
+	if(l > INT32_MAX)
+	{
+		throw MCE();
+	}
+
+	Clear();
 	
 	while(allocated_bytes < length*sizeof(T*))
 	{
@@ -195,19 +212,27 @@ void ArraySequence<T>::SetFromStr(char **values, uint length)
 	
 	T **tmp = body;
 	
-	for(uint i = 0; i < length; i++)
+	for(int i = 0; i < length; i++)
 	{
 		*(tmp++) = StrToNumber(*(values++));
 	}
 }
 
 template <typename T>
-void ArraySequence<T>::SetRandVals(T *(*generator)(), uint length)
-{
-	free(body);
-	allocated_bytes = 0;
-	Sequence<T>::len = 0;
-	
+void ArraySequence<T>::SetRandVals(T *(*generator)(), int length)
+{	
+	if(length < 0)
+	{
+		throw NLE();
+	}
+	long int l = length*sizeof(T*);
+	if(l > INT32_MAX)
+	{
+		throw MCE();
+	}
+
+	Clear();
+
 	while(allocated_bytes < length*sizeof(T*))
 	{
 		extend();
@@ -216,16 +241,16 @@ void ArraySequence<T>::SetRandVals(T *(*generator)(), uint length)
 	
 	T **tmp = body;
 	
-	for(uint i = 0; i < length; i++)
+	for(int i = 0; i < length; i++)
 	{
 		*(tmp++) = generator();
 	}
 }
 
 template <typename T>
-typename Sequence<T>::Slider &(ArraySequence<T>::InitSlider)(uint initpos) const
+typename Sequence<T>::Slider &(ArraySequence<T>::InitSlider)(int initpos) const
 {
-	if(initpos < Sequence<T>::len)
+	if((initpos < Sequence<T>::len) * (initpos >= 0))
 	{
 		typename Sequence<T>::Slider *tmp = new (typename Sequence<T>::Slider)(this, (body + initpos), initpos);
 		Sequence<T>::SList.Append(tmp);
@@ -238,9 +263,9 @@ typename Sequence<T>::Slider &(ArraySequence<T>::InitSlider)(uint initpos) const
 }
 
 template <typename T>
-void ArraySequence<T>::ShiftPtrRight(void  *&ptr, uint &position) const
+void ArraySequence<T>::ShiftPtrRight(void  *&ptr, int &position) const
 {
-	if(((position + 1) < Sequence<T>::len) * (position != -1u))
+	if(((position + 1) < Sequence<T>::len) * (position != INT32_MAX))			//assuming ptr size is more than 1 byte, 2nd comparison is extra, DO NOT DEL THE COMMENT until you fix all such 'mistakes'
 	{
 		ptr += sizeof(T*);
 		++position;
@@ -252,7 +277,7 @@ void ArraySequence<T>::ShiftPtrRight(void  *&ptr, uint &position) const
 }
 
 template <typename T>
-void ArraySequence<T>::ShiftPtrLeft(void  *&ptr, uint &position) const
+void ArraySequence<T>::ShiftPtrLeft(void  *&ptr, int &position) const
 {
 	if(position != 0)
 	{

@@ -4,12 +4,12 @@ class Sequence<T>::Slider
 private:
 	Sequence *master = 0;
 	void *ptr = 0;
-	uint position;
+	int position;
 	void *node;															//ptr to node, that stores ptr to this Slider
 	
 	Slider()
 	{}
-	Slider(Sequence *seq, void *p, uint initpos);
+	Slider(Sequence *seq, void *p, int initpos);
 	
 	void Unbind();
 public:
@@ -17,7 +17,7 @@ public:
 
 	T *GetVal() const;
 	void SetVal(T *a) const;
-	uint GetPosition() const;
+	int GetPosition() const;
 	
 	void ShiftRight();
 	void ShiftLeft();

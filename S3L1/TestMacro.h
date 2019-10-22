@@ -19,5 +19,5 @@ void tell(Result &r)
 	}
 }
 
-#define REQUIRE(equation, result) result.total += 1; try{result.passed += (equation);} catch(Exception E){}
-#define REQUIRE_EXCEPTION(call, exc_code, result) result.total += 1; try{call;} catch(Exception E){result.passed += (E.code == exc_code);}
+#define REQUIRE(equation, result) result.total += 1; try{bool b = (equation); result.passed += b; printf("%d %d\n", result.total, b);} catch(Exception E){printf("%d 0\n", result.total);}
+#define REQUIRE_EXCEPTION(call, exc_code, result) result.total += 1; try{call; printf("%d 0\n", result.total);} catch(Exception E){bool b = (E.code == exc_code); result.passed += b; printf("%d %d\n", result.total, b);}

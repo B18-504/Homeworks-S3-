@@ -4,13 +4,13 @@ template <typename T>
 class ArraySequence : public Sequence<T>
 {
 private:
-	uint allocated_bytes = 0;
+	int allocated_bytes = 0;
 	T **body = 0;
 	
 	void extend();
 	
-	void ShiftPtrRight(void *&ptr, uint &position) const override;
-	void ShiftPtrLeft(void *&ptr, uint &position) const override;
+	void ShiftPtrRight(void *&ptr, int &position) const override;
+	void ShiftPtrLeft(void *&ptr, int &position) const override;
 	T *GetVal(void *ptr) const override;
 	void SetVal(T *val, void *ptr) const override;
 	
@@ -18,23 +18,23 @@ public:
 	
 	ArraySequence() = default;
 	
-	T *operator[](uint index) const override;
+	T *operator[](int index) const override;
 	T *GetFirst() const override;
 	T *GetLast() const override;
 	
-	Sequence<T> *GetSubS(uint start, uint end) const override;
+	Sequence<T> *GetSubS(int start, int end) const override;
 	
 	void Append(T *value) override;
 	void Prepend(T *value) override;
-	void Insert(T *value, uint index) override;
+	void Insert(T *value, int index) override;
 	
 	void Remove(T *value) override;
 	void Clear() override;
 	
-	void SetFromStr(char **values, uint length) override;
-	void SetRandVals(T *(*generator)(), uint length) override;
+	void SetFromStr(char **values, int length) override;
+	void SetRandVals(T *(*generator)(), int length) override;
 	
-	typename Sequence<T>::Slider &InitSlider(uint initpos) const override;
+	typename Sequence<T>::Slider &InitSlider(int initpos) const override;
 	
 	~ArraySequence();
 };

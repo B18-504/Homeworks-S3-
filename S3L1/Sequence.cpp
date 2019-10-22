@@ -1,7 +1,7 @@
 #pragma once
 
 template <typename T>
-uint Sequence<T>::GetLen() const
+int Sequence<T>::GetLen() const
 {
 	return len;
 }
@@ -38,7 +38,7 @@ bool Sequence<T>::IsSorted(char comparison(T &a, T &b)) const
 		}
 		catch(Exception E)
 		{
-			if(E.code != 0x12)
+			if(E.code != 0x12)				//!= OoR
 			{
 				throw E;
 			}

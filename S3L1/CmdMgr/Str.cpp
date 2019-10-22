@@ -1,6 +1,6 @@
 #pragma once
 
-void copy(char *&target, char *source, char &err)						//нуль-терминатор не позже чем по индексу 254!
+void copy(char *&target, char *source, char err = 0)					//нуль-терминатор не позже чем по индексу 254!
 {																		//1 - слишком длинная исходная строка
 	err = 0;
 	unsigned char i = 0;
@@ -9,7 +9,7 @@ void copy(char *&target, char *source, char &err)						//нуль-термина
 	{
 		if(i == 255)
 		{
-			err = 1;
+			throw BSF();
 		}
 		++ps;
 		++i;
@@ -29,9 +29,9 @@ void copy(char *&target, char *source, char &err)						//нуль-термина
 	}
 }
 
-void cmp(char *s1, char *s2, bool &result)								//1 - одинаковые
+bool cmp(char *s1, char *s2)
 {
-	result = 1;
+	bool result = 1;
 	bool run = 1;
 	while((result)*(run))
 	{
@@ -46,9 +46,10 @@ void cmp(char *s1, char *s2, bool &result)								//1 - одинаковые
 		++s1;
 		++s2;
 	}
+	return result;
 }
 
-void copy(char **&target, char **source, char &err)						//Не более 254 строк по 254 значимых символа
+void copy(char **&target, char **source, char err = 0)					//Не более 254 строк по 254 значимых символа
 {																		//Конец массива должен быть nullptr (массив указателей на манер строк Си)
 	err = 0;															//1 - слишком длинная строка
 	unsigned char i = 0;												//2 - слишком много строк
@@ -77,11 +78,11 @@ void copy(char **&target, char **source, char &err)						//Не более 254 �
 	}
 }
 
-void cmp(char **p1, char **p2, bool &result)							//Сравнение массивов строк
+bool cmp(char **p1, char **p2)											//Сравнение массивов строк
 {																		//Конец массива должен быть nullptr (массив указателей на манер строк Си)
 	char **t1 = p1;
 	char **t2 = p2;
-	result = 1;
+	bool result = 1;
 	bool run = 1;
 	while((result)*(run))
 	{
@@ -91,7 +92,7 @@ void cmp(char **p1, char **p2, bool &result)							//Сравнение масс
 		}
 		else if (bool(*p1)*bool(*p2))									//Не закончились
 		{
-			cmp(*p1, *p2, result);
+			result = cmp(*p1, *p2);
 		}
 		else															//Закончился один из двух
 		{
@@ -100,16 +101,11 @@ void cmp(char **p1, char **p2, bool &result)							//Сравнение масс
 		++p1;
 		++p2;
 	}
+	return result;
 }
 
-void set(char **&target, unsigned char l, char &err)
+void set(char **&target, unsigned char l)
 {
-	if(l > 254)
-	{
-		err = 1;
-		return;
-	}
-	err = 0;
-	target = (char**)malloc(sizeof(char*)*(l+1));
+	target = (char**)malloc(sizeof(char*)*((unsigned int)l+1));
 	target[l] = 0;
 }

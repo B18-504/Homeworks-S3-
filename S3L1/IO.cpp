@@ -14,17 +14,14 @@ Number *StrToNumber(char *str)
 	
 	double dbl = 0;
 	int in = 0;
-	uint uin = 0;
 	bool bl;
 	
-	cmp(str, "true", b);
-	if(b)
+	if(cmp(str, "true"))
 	{
 		return new Bool(true);
 	}
 	
-	cmp(str, "false", b);
-	if(b)
+	if(cmp(str, "false"))
 	{
 		return new Bool(false);
 	}
@@ -38,10 +35,6 @@ Number *StrToNumber(char *str)
 		{
 			mul = -1;
 			first = 0;
-		}
-		else if((!first) * (*str == 'u') * (*(str + 1) == 0))
-		{
-			return new Uint(in);
 		}
 		else if(isdigit(*str))
 		{
@@ -72,12 +65,6 @@ Number *StrToNumber(char *str)
 	} while(!err);
 	
 	err = 0;
-	uin = in;
-	
-	if((isdigit(*str)) * ((uin*10 + *str - 48) >= uin) * (*(str + 1) == 0) *(in > 0))
-	{
-		return new Uint(uin);
-	}
 	
 	dbl = in;
 	

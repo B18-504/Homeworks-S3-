@@ -3,8 +3,7 @@
 template <typename T>
 void QuickSort(Sequence<T> &seq, char comparison(T &a, T &b))
 {
-    uint n = seq.GetLen();
-    if(n > 1)
+    if(seq.GetLen() > 1)
     {
         CallStack<T> CS = CallStack<T>();
         typename Sequence<T>::Slider *sllold = &seq.InitSlider(0), *slrold = &seq.InitSlider(seq.GetLen()-1);
@@ -106,6 +105,62 @@ void QuickSort(Sequence<T> &seq, char comparison(T &a, T &b))
                     }
                     free(buff);
                 } while(call_condition == 1);
+            }
+        }
+    }
+}
+
+template <typename T>
+void InsertSort(Sequence<T> &seq, char comparison(T &a, T &b))
+{
+    if(seq.GetLen() > 1)
+    {
+        typename Sequence<T>::Slider *border = &seq.InitSlider(1), *slr, *sll;
+        T *buff;
+        
+        try
+        {
+			//(until OoR)
+N:          slr = &(border->Clone());								//Ждём OoR
+            sll = &(border->Clone());
+            sll->ShiftLeft();
+            
+            buff = border->GetVal();
+
+            try
+            {
+				//(until OoR or found)
+M:              if(!comparison(*(sll->GetVal()), *buff))            //Вечный цикл, выход при обнаружении нужного элемента или левого конца
+                {
+                    slr->SetVal(sll->GetVal());
+                    sll->ShiftLeft();
+                    slr->ShiftLeft();
+                    goto M;
+                }
+                else
+                {
+                    slr->SetVal(buff);
+                }
+            }
+            catch(Exception E)
+            {
+				delete slr, sll;
+                if(E.code != 0x12)
+                {
+                    throw E;
+                }
+                sll->SetVal(buff);
+            }
+
+            border->ShiftRight();
+            goto N;
+        }
+        catch(Exception E)
+        {
+			delete border;
+            if(E.code != 0x12)
+            {
+                throw E;
             }
         }
     }

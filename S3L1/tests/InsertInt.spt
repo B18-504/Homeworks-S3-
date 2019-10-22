@@ -1,0 +1,19 @@
+create array arr
+create list lst
+create number num
+
+Input num
+
+SetRand arr randint num
+SetRand lst randint num
+
+-t InsertSort arr lessoreqint
+-t InsertSort lst lessoreqint
+
+IsSorted arr lessoreqint num
+Print num
+
+IsSorted lst lessoreqint num
+Print num
+
+exit
