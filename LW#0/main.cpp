@@ -1,20 +1,9 @@
-#pragma once
-#ifndef Test_h
-#define Test_h
+﻿#include <iostream>
+#include "listSequence.cpp"
+#include "arraySequence.cpp"
+#include "Test.h"
 
-#include "exception.h"
-#include <iostream>
-
-struct Result
-{
-	int total;
-	int passed;
-};
-
-#define REQUIRE(equation, result) result.total += 1; try{result.passed += (equation);} catch(int){throw errorInTest();}
-#define REQUIRE_EXCEPTION(call, exception, result) result.total += 1; try{call;} catch(exception){result.passed += 1;}
-
-void test()
+int main()
 {
 	Result res;
 	res.passed = 0;
@@ -23,8 +12,8 @@ void test()
 	Sequence<int>* arr = new arraySequence<int>;
 	Sequence<int>* list = new listSequence<int>;
 
-	REQUIRE(arr->GetLength() == 0, res);
-	REQUIRE(list->GetLength() == 0, res);
+	REQUIRE(arr->GetLength() == 0, res); 
+	REQUIRE(list->GetLength() == 0, res); 
 
 	REQUIRE_EXCEPTION(arr->GetFirst(), containerIsEmpty, res);
 	REQUIRE_EXCEPTION(arr->GetLast(), containerIsEmpty, res);
@@ -60,16 +49,16 @@ void test()
 	arr->Append(a);
 	list->Append(a);
 
-	REQUIRE(arr->GetLength() == 2, res);
-	REQUIRE(list->GetLength() == 2, res);
+	REQUIRE(arr->GetLength() == 2, res); 
+	REQUIRE(list->GetLength() == 2, res); 
 
-	REQUIRE(arr->GetFirst() == 12, res);
+	REQUIRE(arr->GetFirst() == 12, res); 
 	REQUIRE(arr->GetLast() == 43, res);
 
 	REQUIRE(list->GetFirst() == 12, res);
 	REQUIRE(list->GetLast() == 43, res);
 
-	REQUIRE(arr->get(0) == 12, res);
+	REQUIRE(arr->get(0) == 12, res); 
 	REQUIRE(arr->get(1) == 43, res);
 
 	REQUIRE(list->get(0) == 12, res);
@@ -107,8 +96,8 @@ void test()
 	REQUIRE_EXCEPTION(list->get(-1), outOfRange, res);
 	REQUIRE_EXCEPTION(list->get(3), outOfRange, res);
 
-	Sequence<int> * a1 = arr->GetSubsequence(1, 1);
-	Sequence<int> * l1 = list->GetSubsequence(1, 1);
+	Sequence<int>* a1 = arr->GetSubsequence(1, 1);
+	Sequence<int>* l1 = list->GetSubsequence(1, 1);
 
 	REQUIRE(a1->GetLength() == 1, res);
 	REQUIRE(l1->GetLength() == 1, res);
@@ -119,14 +108,6 @@ void test()
 	REQUIRE(l1->GetFirst() == 12, res);
 	REQUIRE(l1->GetLast() == 12, res);
 
-	std::cout << "Passed " << res.passed << " call tests of " << res.total << "\nStatus: ";
-	if (res.passed == res.total){
-		std::cout << "OK\n";
-	}
-	else{
-		std::cout << "FAIL\n";
-	}
+	tell(res);
 
 }
-
-#endif

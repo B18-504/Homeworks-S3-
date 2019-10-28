@@ -102,12 +102,8 @@ template<typename Item>
 void listSequence<Item>::Remove(Item item) {
 	Node* currentNode;
 	currentNode = this->head;
-
-	if (currentNode == nullptr) return;
-
 	if (currentNode->getData() == item) {
-		if (currentNode->getNext() != nullptr)currentNode->getNext()->setPrevious(nullptr);
-		else this->tail = nullptr;
+		currentNode->getNext()->setPrevious(nullptr);
 		this->head = currentNode->getNext();
 		this->length--;
 		return;
