@@ -245,24 +245,23 @@ bool (BPlus<K, T>::EndNode::IsPresent)(const K &key) const
     int i = 0;
     K **tmp = Node::keys;
 
-    printf("%d: ", Node::used_keys);
 
     while(1)
     {
-        printf("%d ", i);
+        //printf("%d %d", Node::used_keys, i);
         if(i == Node::used_keys)
         {
-            printf("!\n");
+            //printf("!\n");
             return 0;
         }
         else if(**tmp == key)
         {
-            printf("\n");
+            printf("?\n");
             return 1;
         }
         else
         {
-            printf("++ ");
+            //printf("++ ");
             tmp++;
             i++;
         }
