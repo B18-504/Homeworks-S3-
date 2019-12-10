@@ -10,6 +10,7 @@ BPlus<K, T>::BPlus(int max_degree)
 {
     this->max_degree = max_degree;
     head = new EndNode(max_degree);
+    count = 0;
 }
 
 template <typename K, typename T>
@@ -31,13 +32,24 @@ bool (BPlus<K, T>::IsPresent)(const K &key) const
 }
 
 template <typename K, typename T>
+int BPlus<K, T>::GetCount() const
+{
+    return count;
+}
+
+template <typename K, typename T>
 void BPlus<K, T>::Set(const K &key, const T &value)
 {
+    if(!IsPresent(key))                             //to be removed
+    {
+        count++;
+    }
+
     Node *new_node = head->Set(*new K(key), *new T(value));
     if(new_node)
     {
         InterNode *new_head = new InterNode(max_degree);
-        *new_head->Node::keys[0] = new_node->keys[0];
+        new_head->Node::keys[0] = &(new_node->GetLeastKey());
         new_head->nodes[0] = head;
         new_head->nodes[1] = new_node;
         head = new_head;
@@ -49,4 +61,10 @@ template <typename K, typename T>
 void BPlus<K, T>::Remove(const K &key)
 {
     bool need_merging = head->Remove(key);
+}
+
+template <typename K, typename T>
+typename BPlus<K, T>::EndNode *(BPlus<K, T>::StartIterator)()
+{
+    return head->StartIterator();
 }

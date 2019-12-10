@@ -1,5 +1,7 @@
 #pragma once
 
+#define uint unsigned int				//need investigation about it
+
 struct Result
 {
 	uint total;

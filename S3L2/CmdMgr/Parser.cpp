@@ -4,6 +4,8 @@
 
 //Консольный ввод
 
+//long wordlists unsafe
+
 
 
 struct word
@@ -16,7 +18,7 @@ struct word
 struct wordlist
 {
 	word *first;
-	unsigned char l;
+	int l;
 };
 
 void wipe(wordlist &a)
@@ -174,40 +176,38 @@ void finput(word &a, FILE *fstream, char &flag)							//0 - успешный в�
 			a.l++;
 			buff = fgetc(fstream);
 		}
-	}															
+	}														
 }
 
 void finput(wordlist &a, FILE *fstream, char &err)						//1 - слишком длинное слово
 {																		//2 - успешный ввод последнего в файле слова
-	word *ptr = (word*)malloc(sizeof(word));							//3 - слишком много слов
+	word *ptr = (word*)malloc(sizeof(word));
 	a.first = ptr;
 	a.l = 0;
 	err = 0;
 	while (!err)
 	{
-		if (a.l == 255)
+		/*if (a.l == 255)
 		{
 			err = 4;
+		}*/
+		//else
+		finput(*ptr, fstream, err);
+		if(ptr->l)
+		{
+			++a.l;
+			if(!err)
+			{
+				ptr->next = (word*)malloc(sizeof(word));
+				ptr = ptr->next;
+			}
 		}
 		else
 		{
-			finput(*ptr, fstream, err);
-			if(ptr->l)
-			{
-				++a.l;
-				if(!err)
-				{
-					ptr->next = (word*)malloc(sizeof(word));
-					ptr = ptr->next;
-				}
-			}
-			else
-			{
-				ptr->next = 0;
-			}
+			ptr->next = 0;
 		}
 	}
-	if (err > 1)
+	if (err == 2)
 	{
 		wipe(a);
 	}
@@ -227,5 +227,21 @@ void finput(char **&p, FILE *fstream, unsigned char &length, char &err)	//1 - с
 	{
 		copy(p, a, err);
 	};
+	wipe(a);
+}
+
+void finput(char **&p, FILE *fstream, int &length, char &err)	//1 - слишком длинное слово
+{																//2 - файл закончился
+	if(!bool(fstream))											//3 - слишком много слов
+	{
+		throw FSE();
+	}
+	wordlist a;
+	finput(a, fstream, err);
+	length = a.l;
+	if (err != 1)
+	{
+		copy(p, a, err);
+	}
 	wipe(a);
 }

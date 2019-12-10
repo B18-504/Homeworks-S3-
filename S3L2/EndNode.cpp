@@ -220,20 +220,22 @@ T &(BPlus<K, T>::EndNode::Get)(const K &key) const
     K **tmp = Node::keys;
     T **slot = values;
 
-M:  if(i == Node::used_keys)
+    while(1)
     {
-        throw KNF();
-    }
-    else if(**tmp == key)
-    {
-        return **slot;
-    }
-    else
-    {
-        slot++;
-        tmp++;
-        i++;
-        goto M;
+        if(i == Node::used_keys)
+        {
+            throw KNF();
+        }
+        else if(**tmp == key)
+        {
+            return **slot;
+        }
+        else
+        {
+            slot++;
+            tmp++;
+            i++;
+        }
     }
 }
 
@@ -243,19 +245,27 @@ bool (BPlus<K, T>::EndNode::IsPresent)(const K &key) const
     int i = 0;
     K **tmp = Node::keys;
 
-M:  if(i == Node::used_keys)
+    printf("%d: ", Node::used_keys);
+
+    while(1)
     {
-        return 0;
-    }
-    else if(**tmp == key)
-    {
-        return 1;
-    }
-    else
-    {
-        tmp++;
-        i++;
-        goto M;
+        printf("%d ", i);
+        if(i == Node::used_keys)
+        {
+            printf("!\n");
+            return 0;
+        }
+        else if(**tmp == key)
+        {
+            printf("\n");
+            return 1;
+        }
+        else
+        {
+            printf("++ ");
+            tmp++;
+            i++;
+        }
     }
 }
 
@@ -301,4 +311,85 @@ M:  if(i == Node::used_keys)
         goto M;
     }
     
+}
+
+template <typename K, typename T>
+K &(BPlus<K, T>::EndNode::GetLeastKey)() const
+{
+    if(Node::used_keys)
+    {
+        return *(Node::keys[0]);
+    }
+    else
+    {
+        throw CIE();
+    }
+}
+
+template <typename K, typename T>
+typename BPlus<K, T>::Node *(BPlus<K, T>::EndNode::StartIterator)() const
+{
+    return this;
+}
+
+template <typename K, typename T>
+typename BPlus<K, T>::EndNode *(BPlus<K, T>::EndNode::ShiftLeft)(int &pos) const
+{
+    if(pos > 0)
+    {
+        pos--;
+        return this;
+    }
+    else if(left)
+    {
+        pos = left->Node::used_keys - 1;
+        return left;
+    }
+    else
+    {
+        throw OoR();
+    }
+}
+
+template <typename K, typename T>
+typename BPlus<K, T>::EndNode *(BPlus<K, T>::EndNode::ShiftRight)(int &pos) const
+{
+    if(pos < (Node::used_keys - 1))
+    {
+        pos++;
+        return this;
+    }
+    else if(right)
+    {
+        pos = 0;
+        return right;
+    }
+    else
+    {
+        throw OoR();
+    }
+}
+
+template <typename K, typename T>
+bool BPlus<K, T>::EndNode::HasPrev(int pos) const
+{
+    return((pos > 0) + bool(left));
+}
+
+template <typename K, typename T>
+bool BPlus<K, T>::EndNode::HasNext(int pos) const
+{
+    return((pos < (Node::used_keys - 1)) + bool(right));
+}
+
+template <typename K, typename T>
+T &(BPlus<K, T>::EndNode::GetI)(int pos) const
+{
+    return(*(values[pos]));
+}
+
+template <typename K, typename T>
+K &(BPlus<K, T>::EndNode::GetKey)(int pos) const
+{
+    return(*(Node::keys[pos]));
 }
