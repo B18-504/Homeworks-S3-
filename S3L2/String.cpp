@@ -29,36 +29,45 @@ String::String(char *a)
 
 bool operator>(const String &a, const String &b)
 {
-    bool result;
     char *ap = a.body, *bp = b.body;
-    do {
-        result = (*ap > *bp);
+    while(*ap == *bp)
+    {
+        if(*ap == 0)
+        {
+            return 0;
+        }
         ap++;
         bp++;
-    } while(result * bool(*ap) * bool(*bp));
-    return result;
+    }
+    return *ap > *bp;
 }
 
 bool operator<(const String &a, const String &b)
 {
-    bool result;
     char *ap = a.body, *bp = b.body;
-    do {
-        result = (*ap < *bp);
+    while(*ap == *bp)
+    {
+        if(*ap == 0)
+        {
+            return 0;
+        }
         ap++;
         bp++;
-    } while(result * bool(*ap) * bool(*bp));
-    return result;
+    }
+    return *ap < *bp;
 }
 
 bool operator==(const String &a, const String &b)
 {
-    bool result;
     char *ap = a.body, *bp = b.body;
-    do {
-        result = (*ap == *bp);
+    while(*ap == *bp)
+    {
+        if(*ap == 0)
+        {
+            return 1;
+        }
         ap++;
         bp++;
-    } while(result * bool(*ap) * bool(*bp));
-    return result;
+    }
+    return 0;
 }

@@ -1,4 +1,5 @@
-void swp(void *a, void *b);
+template <typename T>
+void swp(T *&a, T *&b);
 
 template <typename K, typename T>
 BPlus<K, T>::InterNode::InterNode(int max_degree)
@@ -112,8 +113,8 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::Set)(K &key, T &value)
                 slots++;
                 i++;
 
-                swp(tmp, kbuff);
-                swp(slots, nbuff);
+                swp(*tmp, kbuff);
+                swp(*slots, nbuff);
             }
 
             Node::used_keys++;
@@ -138,8 +139,8 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::Set)(K &key, T &value)
                     slots++;
                     i++;
 
-                    swp(tmp, kbuff);
-                    swp(slots, nbuff);
+                    swp(*tmp, kbuff);
+                    swp(*slots, nbuff);
                 }
 
                 K **ksource = tmp + 1, **kdest = yet_another_node->Node::keys;

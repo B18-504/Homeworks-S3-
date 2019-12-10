@@ -1,6 +1,7 @@
-inline void swp(void *a, void *b)
+template <typename T>
+inline void swp(T *&a, T *&b)
 {
-    void *c = a;
+    T *c = a;
     a = b;
     b = c;
 }

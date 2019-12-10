@@ -13,7 +13,6 @@ Dict<String, int> &CreateAlphaIndex(char **word_arr, int words_number, int std_p
     for(int i = 0; i < words_number; i++)
     {
         String curr_word(*word_arr);
-        printf("%s %s\n", *word_arr, curr_word.body);
         symbols_on_page += curr_word.len + 1;
         if(symbols_on_page > curr_page_cap)
         {
@@ -32,8 +31,6 @@ Dict<String, int> &CreateAlphaIndex(char **word_arr, int words_number, int std_p
 
         if(!(result->IsPresent(curr_word)))
         {
-            printf("%d!\n", i);
-
             result->Set(curr_word, curr_page_number);
         }   
 
