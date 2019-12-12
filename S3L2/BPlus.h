@@ -76,7 +76,7 @@ private:
 
     int count;
 
-    EndNode *StartIterator();
+    Node *StartIterator() const;
 
 public:
     class Iterator
@@ -87,7 +87,7 @@ public:
     
     public:
         Iterator() = delete;
-        Iterator(BPlus<K, T>&);
+        Iterator(const BPlus<K, T>&);
         ~Iterator() = default;
 
         T &Get() const;
@@ -114,4 +114,4 @@ public:
 #include "BPlus.cpp"
 #include "EndNode.cpp"
 #include "InterNode.cpp"
-#include "Iterator.cpp"
+#include "BPlusIterator.cpp"

@@ -4,9 +4,8 @@
 
 Dict<String, int> &CreateAlphaIndex(char **word_arr, int words_number, int std_page_size)
 {
-    Dict<String, int> *result = new BPlusDict<String, int>(50);
+    Dict<String, int> &result = *new BPlusDict<String, int>(50);
 
-    //std::string curr_word;
     int curr_page_number = 1, curr_page_cap = std_page_size/2;
     int symbols_on_page = -1;
 
@@ -29,15 +28,15 @@ Dict<String, int> &CreateAlphaIndex(char **word_arr, int words_number, int std_p
             }
         }
 
-        if(!(result->IsPresent(curr_word)))
+        if(!(result.IsPresent(curr_word)))
         {
-            result->Set(curr_word, curr_page_number);
+            result.Set(curr_word, curr_page_number);
         }   
 
         word_arr++; 
     }
 
-    return *result;
+    return result;
 }
 
 Dict<String, int> &CreateAlphaIndex(FILE *ifstream, int std_page_size)

@@ -105,3 +105,25 @@ Number *StrToNumber(char *str)
 	
 	throw(BSF());
 }
+
+void Print(Dict<String, int> &a)
+{
+    Dict<String, int>::Iterator &I = a.StartIterator();
+    while(I.HasNext())
+    {
+        printf("%s: %d\n", I.GetKey().body, I.Get());
+        I.ShiftRight();
+    }
+    printf("%s: %d\n", I.GetKey().body, I.Get());
+}
+
+void Print(Dict<int, int> &a)
+{
+    Dict<int, int>::Iterator &I = a.StartIterator();
+    while(I.HasNext())
+    {
+        printf("%d: %d\n", I.GetKey(), I.Get());
+        I.ShiftRight();
+    }
+    printf("%d: %d\n", I.GetKey(), I.Get());
+}

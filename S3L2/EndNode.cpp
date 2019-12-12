@@ -303,8 +303,7 @@ M:  if(i == Node::used_keys)
         slots++;
         i++;
         goto M;
-    }
-    
+    }   
 }
 
 template <typename K, typename T>

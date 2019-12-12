@@ -8,6 +8,27 @@ private:
     BPlus<K, T> *body;
 
 public:
+    class BPlusDictIterator : public Dict<K, T>::Iterator
+    {
+    private:
+        typename BPlus<K, T>::Iterator *body;
+
+        BPlusDictIterator() = default;
+
+    public:
+        BPlusDictIterator(const BPlusDict<K, T>&);
+        ~BPlusDictIterator();
+
+        T &Get() const override;
+        K &GetKey() const override;
+        bool HasNext() const override;
+        bool HasPrev() const override;
+        void ShiftRight() override;
+        void ShiftLeft() override;
+    };
+
+    friend class BPlusDictIterator;
+
     BPlusDict(int max_grade)
     {
         body = new BPlus<K, T>(max_grade);
@@ -47,4 +68,11 @@ public:
     {
         body->Remove(key);
     }
+
+    typename Dict<K, T>::Iterator &(StartIterator)() const override
+    {
+        return *new BPlusDictIterator(*this);
+    }
 };
+
+#include "BPlusDictIterator.cpp"

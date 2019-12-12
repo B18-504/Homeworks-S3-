@@ -46,6 +46,7 @@ void BPlus<K, T>::Set(const K &key, const T &value)
         count++;
     }
 
+
     Node *new_node = head->Set(*new K(key), *new T(value));
     if(new_node)
     {
@@ -65,7 +66,7 @@ void BPlus<K, T>::Remove(const K &key)
 }
 
 template <typename K, typename T>
-typename BPlus<K, T>::EndNode *(BPlus<K, T>::StartIterator)()
+typename BPlus<K, T>::Node *(BPlus<K, T>::StartIterator)() const
 {
     return head->StartIterator();
 }

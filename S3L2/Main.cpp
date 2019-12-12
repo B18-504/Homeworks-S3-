@@ -15,11 +15,12 @@
 #include "Test.cpp"
 #include "CmdBinds.cpp"
 
-
 int main()
 {
 	FILE *ifstream = fopen("lol.txt", "r");
 	Dict<String, int> &AlphaIndex = CreateAlphaIndex(ifstream, 20);
+
+	Print(AlphaIndex);
 
 	HTable table;
 	init(table);

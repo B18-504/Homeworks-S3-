@@ -1,7 +1,7 @@
 #pragma once
 
 template <typename K, typename T>
-BPlus<K, T>::Iterator::Iterator(BPlus<K, T> &a)
+BPlus<K, T>::Iterator::Iterator(const BPlus<K, T> &a)
 {
     curr_node = a.StartIterator();
     curr_pos = 0;
