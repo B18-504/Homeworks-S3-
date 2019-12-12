@@ -89,22 +89,29 @@ void inputseq(void ***argv)
 
 void printseq(void ***argv)
 {
-	Sequence<Number>::Slider &sl = ((Sequence<Number>*)(**argv))->InitSlider(0);
-	if(sl.IsBound())
+	if(**argv)
 	{
-		try
+		Sequence<Number>::Slider &sl = ((Sequence<Number>*)(**argv))->InitSlider(0);
+		if(sl.IsBound())
 		{
-M:			printf("%s ", sl.GetVal().ValueAsStr());					//бесконечный цикл, только не говорите, что нечитаемо
-			sl.ShiftRight();
-			goto M;
-		}
-		catch(Exception E)
-		{
-			printf("\n");
-			if(E.code != 0x12)
+			try
 			{
-				throw E;
+M:				printf("%s ", sl.GetVal().ValueAsStr());					//бесконечный цикл, только не говорите, что нечитаемо
+				sl.ShiftRight();
+				goto M;
 			}
+			catch(Exception E)
+			{
+				printf("\n");
+				if(E.code != 0x12)
+				{
+					throw E;
+				}
+			}
+		}
+		else
+		{
+			printf("Empty sequence\n");
 		}
 	}
 	else
@@ -323,12 +330,12 @@ void binds(HTable &table)
 	
 	bindt(table, "number", sizeof(Number*));							//Виртуальные типы можно привязывать как обычные
 	bindt(table, "file", sizeof(FILE*));								//Перед использованием СТРОГО необходимо вызвать инициализирующую функцию
-																		//Тк инициализация объекта абстрактного типа недопустима
+	bindt(table, "int", sizeof(int));									//Тк инициализация объекта абстрактного типа недопустима
 																		
 	bindvt(table, "sequence", err);										
-	bindit(table, "array", "sequence", generateArray, err);
-	bindit(table, "list", "sequence", generateListSequence, err);		//Привязка виртуальных типов через специальный интерфейс
-																		//Создание возможно ТОЛЬКО указанием имплементирующего типа
+	bindit(table, "array", "sequence", generateArray, err);				//Привязка виртуальных типов через специальный интерфейс
+	bindit(table, "list", "sequence", generateListSequence, err);		//При создании экземпляра виртуального типа будет создан пустой объект (ptr = 0)
+			
 	char **types;
 	
 	set(types, 4);

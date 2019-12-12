@@ -29,34 +29,53 @@ void create(binding **&argv, unsigned char argc)
 				throw SNR();
 			}
 		}
-		else
+		else if(cmp(argv[1]->type, "it"))
 		{
-			if(cmp(argv[1]->type, "it"))
+			if(cmp(argv[2]->type, "input"))
 			{
-				if(cmp(argv[2]->type, "input"))
+				bind(*(HTable*)(argv[0]->ptr), ((itdata*)(argv[1]->ptr))->generator(), argv[2]->ptr, ((itdata*)(argv[1]->ptr))->vtname, 0);
+				if(err)
 				{
-					bind(*(HTable*)(argv[0]->ptr), ((itdata*)(argv[1]->ptr))->generator(), argv[2]->ptr, ((itdata*)(argv[1]->ptr))->vtname, 0);
-					if(err)
-					{
-						printf("Облажались, переменная не создана!\n");
-					}
+					printf("Облажались, переменная не создана!\n");
 				}
-				else if(!argv[2]->strong)
-				{
-					reset(*(argv[2]));
+			}
+			else if(!argv[2]->strong)
+			{
+				reset(*(argv[2]));
 
-					argv[2]->ptr = ((itdata*)(argv[1]->ptr))->generator();
-					copy(argv[2]->type, ((itdata*)(argv[1]->ptr))->vtname, err);
-				}
-				else
-				{
-					throw SNR();
-				}
+				argv[2]->ptr = ((itdata*)(argv[1]->ptr))->generator();
+				copy(argv[2]->type, ((itdata*)(argv[1]->ptr))->vtname, err);
 			}
 			else
 			{
-				throw(ITN());
+				throw SNR();
 			}
+		}
+		else if(cmp(argv[1]->type, "vt"))
+		{
+			if(cmp(argv[2]->type, "input"))
+			{
+				bind(*(HTable*)(argv[0]->ptr), 0, argv[2]->ptr, argv[1]->key, 0);
+				if(err)
+				{
+					printf("Облажались, переменная не создана!\n");
+				}
+			}
+			else if(!argv[2]->strong)
+			{
+				reset(*(argv[2]));
+
+				argv[2]->ptr = 0;
+				copy(argv[2]->type, argv[1]->key);
+			}
+			else
+			{
+				throw SNR();
+			}
+		}
+		else
+		{
+			throw(ITN());
 		}
 	}
 	return;
