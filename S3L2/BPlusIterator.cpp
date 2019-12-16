@@ -20,6 +20,12 @@ K &(BPlus<K, T>::Iterator::GetKey)() const
 }
 
 template <typename K, typename T>
+void BPlus<K, T>::Iterator::Set(const T &a) const
+{
+    curr_node->SetI(a, curr_pos);
+}
+
+template <typename K, typename T>
 bool BPlus<K, T>::Iterator::HasNext() const
 {
     return curr_node->HasNext(curr_pos);

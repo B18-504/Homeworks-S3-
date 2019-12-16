@@ -21,6 +21,7 @@ public:
 
         T &Get() const override;
         K &GetKey() const override;
+        void Set(const T&) const override;
         bool HasNext() const override;
         bool HasPrev() const override;
         void ShiftRight() override;

@@ -13,7 +13,7 @@
 #include "AlphaIndex.h"
 #include "IO.cpp"														
 #include "Test.cpp"
-#include "CmdBinds.cpp"
+#include "Binds/CmdBinds.cpp"
 
 int main()
 {

@@ -25,6 +25,12 @@ K &(BPlusDict<K, T>::BPlusDictIterator::GetKey)() const
 }
 
 template <typename K, typename T>
+void BPlusDict<K, T>::BPlusDictIterator::Set(const T &val) const
+{
+    body->Set(val);
+}
+
+template <typename K, typename T>
 bool BPlusDict<K, T>::BPlusDictIterator::HasNext() const
 {
     return body->HasNext();

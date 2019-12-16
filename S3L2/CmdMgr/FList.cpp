@@ -33,7 +33,7 @@ void find(Overrides &o, void (*&function)(void***), char **types, char &err)	//1
 	return;
 }
 
-void bindf(HTable &table, void *function, char *key, char **types, char &err)	//1 - слишком длинное имя/типы
+void bindf(HTable &table, void(*function)(void***), char *key, char **types, char &err)	//1 - слишком длинное имя/типы
 {																		//2 - имя занято переменной или внутренней функцией (пока что нельзя перегружать внутренние обычными)
 	binding *pb;														//3 - перегрузка с данными типами уже существует
 	find(table, pb, key, err);

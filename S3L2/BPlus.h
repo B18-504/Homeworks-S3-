@@ -46,6 +46,12 @@ private:
 
     class EndNode : public Node
     {
+    private:
+        T &GetI(int) const;
+        void SetI(const T&, int);
+
+        friend class BPlus<K, T>::Iterator;
+    
     public:
         T **values;
         EndNode *left, *right;
@@ -62,7 +68,6 @@ private:
         EndNode *ShiftLeft(int&) const;
         bool HasNext(int) const;
         bool HasPrev(int) const;
-        T &GetI(int) const;
         K &GetKey(int) const;
 
         EndNode() = delete;
@@ -92,6 +97,7 @@ public:
 
         T &Get() const;
         K &GetKey() const;
+        void Set(const T&) const;
         bool HasNext() const;
         bool HasPrev() const;
         void ShiftRight();

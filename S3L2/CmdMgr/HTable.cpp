@@ -33,8 +33,11 @@ struct HTable
 
 void reset(binding &a)
 {
+	char err;
 	free(a.ptr);
 	free(a.type);
+	a.ptr = 0;
+	copy(a.type, "none", err);
 }
 
 

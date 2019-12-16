@@ -260,5 +260,4 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::StartIterator)() const
     {
         throw CIE();
     }
-    
 }

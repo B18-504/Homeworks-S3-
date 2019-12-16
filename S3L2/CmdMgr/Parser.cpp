@@ -77,11 +77,11 @@ void input(wordlist &a, char &err)										//1 - слишком длинное 
 	err = 0;
 	while (!err)
 	{
-		if (a.l == 255)
-		{
-			err = 3;
-		}
-		else
+		//if (a.l == 255)
+		//{
+		//	err = 3;
+		//}
+		//else
 		{
 			input(*ptr, err);
 			if(ptr->l)
@@ -122,6 +122,18 @@ void copy(char **&target, wordlist &source, char &err)
 }
 
 void input(char **&p, unsigned char &length, char &err)					//1 - слишком длинное слово
+{																		//2 - слишком много слов
+	wordlist a;
+	input(a, err);
+	length = a.l;
+	if (!err)
+	{
+		copy(p, a, err);
+	};
+	wipe(a);
+}
+
+void input(char **&p, int &length, char &err)							//1 - слишком длинное слово
 {																		//2 - слишком много слов
 	wordlist a;
 	input(a, err);

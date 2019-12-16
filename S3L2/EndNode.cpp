@@ -382,6 +382,12 @@ T &(BPlus<K, T>::EndNode::GetI)(int pos) const
 }
 
 template <typename K, typename T>
+void BPlus<K, T>::EndNode::SetI(const T &val, int pos)
+{
+    values[pos] = new T(val);
+}
+
+template <typename K, typename T>
 K &(BPlus<K, T>::EndNode::GetKey)(int pos) const
 {
     return(*(Node::keys[pos]));
