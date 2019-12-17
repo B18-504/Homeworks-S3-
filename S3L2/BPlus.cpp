@@ -9,9 +9,16 @@ inline void swp(T *&a, T *&b)
 template <typename K, typename T>
 BPlus<K, T>::BPlus(int max_degree)
 {
-    this->max_degree = max_degree;
-    head = new EndNode(max_degree);
-    count = 0;
+    if(max_degree > 4)
+    {
+        this->max_degree = max_degree;
+        head = new EndNode(max_degree);
+        count = 0;
+    }
+    else
+    {
+        throw Exception(1, "BPlus tree's max grade should not be less than 5");
+    }
 }
 
 template <typename K, typename T>

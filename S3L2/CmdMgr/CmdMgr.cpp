@@ -6,7 +6,7 @@ void getcmd(HTable &table, bool &finish, FILE *script_file = 0)
 {	
 	char **p;
 	unsigned char argc;
-	char err;
+	char err = 0;
 
 	std::chrono::time_point<std::chrono::system_clock> start, end;
 	
@@ -25,11 +25,19 @@ void getcmd(HTable &table, bool &finish, FILE *script_file = 0)
 	if(err == 1)
 	{
 		printf("too long word\n");
+		if(script_file)
+		{
+			finish = 1;
+		}
 		return;
 	}
 	else if(err == 2)
 	{
 		printf("too much words\n");
+		if(script_file)
+		{
+			finish = 1;
+		}
 		return;
 	}
 	
@@ -195,10 +203,6 @@ void getcmd(HTable &table, bool &finish, FILE *script_file = 0)
 				printf("?\n");
 			}
 			
-		}
-		if(time_submission)
-		{
-			--p;
 		}
 		//free(p);
 	}

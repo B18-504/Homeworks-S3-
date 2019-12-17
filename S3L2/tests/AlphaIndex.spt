@@ -3,9 +3,13 @@ create int i
 create file f
 
 Input i
+StartBPlusDict d i
+
+Input i
 StartInFile f lol.txt
 
 AlphaIndex d i f
+
 Print d
 
 del d

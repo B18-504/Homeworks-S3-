@@ -2,10 +2,8 @@
 
 #include "CmdMgr/Parser.cpp"            //to be replaced
 
-Dict<String, int> &CreateAlphaIndex(char **word_arr, int words_number, int std_page_size)
+Dict<String, int> &CreateAlphaIndex(Dict<String, int> &result, char **word_arr, int words_number, int std_page_size)
 {
-    Dict<String, int> &result = *new BPlusDict<String, int>(50);
-
     int curr_page_number = 1, curr_page_cap = std_page_size/2;
     int symbols_on_page = -1;
 
@@ -35,11 +33,9 @@ Dict<String, int> &CreateAlphaIndex(char **word_arr, int words_number, int std_p
 
         word_arr++; 
     }
-
-    return result;
 }
 
-Dict<String, int> &CreateAlphaIndex(FILE *ifstream, int std_page_size)
+Dict<String, int> &CreateAlphaIndex(Dict<String, int> &result, FILE *ifstream, int std_page_size)
 {
     char **words;
     int word_num;
@@ -51,7 +47,6 @@ Dict<String, int> &CreateAlphaIndex(FILE *ifstream, int std_page_size)
     }
     else
     {
-        return CreateAlphaIndex(words, word_num, std_page_size);
+        CreateAlphaIndex(result, words, word_num, std_page_size);
     }
 }
-

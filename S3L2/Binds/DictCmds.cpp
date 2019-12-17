@@ -114,14 +114,9 @@ void PrintDict(void ***argv)
 
 void AlphaIndex(void ***argv)
 {
-    if(*(argv[2]))
+    if(bool(*(argv[2])) * bool(*(argv[0])))
     {
-        if(*(argv[0]))
-        {
-            delete (Dict<String, int>*)(*(argv[0]));
-        }
-
-        *(argv[0]) = &CreateAlphaIndex((FILE*)(*(argv[2])), *(int*)argv[1]);
+        CreateAlphaIndex(*(Dict<String, int>*)(*(argv[0])), (FILE*)(*(argv[2])), *(int*)argv[1]);
     }
     else
     {
