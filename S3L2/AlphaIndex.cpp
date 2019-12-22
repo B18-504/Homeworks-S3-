@@ -25,11 +25,13 @@ Dict<String, int> &CreateAlphaIndex(Dict<String, int> &result, char **word_arr, 
                 curr_page_cap = std_page_size/4 * 3;
             }
         }
+        
+        //printf("!\n");
 
         if(!(result.IsPresent(curr_word)))
         {
             result.Set(curr_word, curr_page_number);
-        }   
+        }
 
         word_arr++; 
     }
@@ -41,7 +43,7 @@ Dict<String, int> &CreateAlphaIndex(Dict<String, int> &result, FILE *ifstream, i
     int word_num;
     char err;
     finput(words, ifstream, word_num, err);
-    if(err > 0)
+    if(err != 0)
     {
         throw BFI();
     }

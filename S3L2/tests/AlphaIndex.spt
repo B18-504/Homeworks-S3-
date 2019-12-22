@@ -12,6 +12,7 @@ AlphaIndex d i f
 
 Print d
 
+StopFile f
 del d
 del i
 del f

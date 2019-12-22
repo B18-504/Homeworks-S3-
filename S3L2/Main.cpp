@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "stdio.h"
 #include "time.h"
+#include "locale.h"
 
 #include "Exceptions.h"
 
@@ -17,6 +18,8 @@
 
 int main()
 {
+	setlocale(0, "RUS");
+	
 	HTable table;
 	init(table);
 	try
