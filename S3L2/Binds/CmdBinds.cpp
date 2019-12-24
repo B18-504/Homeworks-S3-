@@ -37,7 +37,7 @@ void binds(HTable &table)
 
 	bindf(table, DictIsPresent<int, int>, "IsPresent", types, err);
 	bindf(table, DictGet<int, int>, "Get", types, err);
-	bindf(table, DictSet<int, int>, "Set", types, err);
+	bindf(table, DictAdd<int, int>, "Add", types, err);
 
 	copy(types[0], "Dict<str:int>", err);
 	copy(types[1], "int", err);
@@ -62,7 +62,7 @@ void binds(HTable &table)
 	bindf(table, StartBPlusDict<int, int>, "StartBPlusDict", types, err);
 	bindf(table, DictGetCount<int, int>, "GetCount", types, err);
 	bindf(table, DictCurrentCap<int, int>, "CurrentCap", types, err);
-	bindf(table, DictRemove<int, int>, "Remove", types, err);
+	//bindf(table, DictRemove<int, int>, "Remove", types, err);
 
 	copy(types[0], "Dict<str:int>", err);
 

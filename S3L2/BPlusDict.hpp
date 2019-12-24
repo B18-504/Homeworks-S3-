@@ -60,15 +60,15 @@ public:
         return body->Get(key);
     }
 
-    void Set(const K& key, const T& value) override
+    void Add(const K& key, const T& value) override
     {
-        body->Set(key, value);
+        body->Add(key, value);
     }
 
-    void Remove(const K& key) override
+    /*void Remove(const K& key) override
     {
         body->Remove(key);
-    }
+    }*/
 
     typename Dict<K, T>::Iterator &(StartIterator)() const override
     {

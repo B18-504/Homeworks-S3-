@@ -30,7 +30,7 @@ Dict<String, int> &CreateAlphaIndex(Dict<String, int> &result, char **word_arr, 
 
         if(!(result.IsPresent(curr_word)))
         {
-            result.Set(curr_word, curr_page_number);
+            result.Add(curr_word, curr_page_number);
         }
 
         word_arr++; 

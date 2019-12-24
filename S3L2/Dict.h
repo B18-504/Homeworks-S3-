@@ -31,8 +31,8 @@ public:
     virtual bool IsPresent(const K&) const = 0;
 
     virtual T &Get(const K&) const = 0;
-    virtual void Set(const K&, const T&) = 0;
-    virtual void Remove(const K&) = 0;
+    virtual void Add(const K&, const T&) = 0;
+    //virtual void Remove(const K&) = 0;
 
     virtual Iterator &StartIterator() const = 0;
 };

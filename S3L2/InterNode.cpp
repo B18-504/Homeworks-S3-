@@ -68,7 +68,7 @@ bool BPlus<K, T>::InterNode::IsPresent(const K& key) const
 }
 
 template <typename K, typename T>
-typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::Set)(K &key, T &value)
+typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::Add)(K &key, T &value)
 {
     K **tmp = Node::keys;
     Node **slots = nodes;
@@ -80,7 +80,7 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::Set)(K &key, T &value)
     {
         if(key < **tmp)
         {
-            new_node = (*slots)->Set(key, value);
+            new_node = (*slots)->Add(key, value);
             found = 1;
         }
 
@@ -90,7 +90,7 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::Set)(K &key, T &value)
     }
     if(!found)
     {
-        new_node = (*slots)->Set(key, value);
+        new_node = (*slots)->Add(key, value);
 
         tmp++;
         slots++;
@@ -233,7 +233,7 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::Set)(K &key, T &value)
 }
 
 template <typename K, typename T>
-bool BPlus<K, T>::InterNode::Remove(const K &key)
+bool BPlus<K, T>::InterNode::PopFirst(K *&key, T *&value)
 {
     
 }

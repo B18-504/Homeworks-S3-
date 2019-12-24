@@ -30,7 +30,7 @@ BPlus<K, T>::EndNode::~EndNode()
 }
 
 template <typename K, typename T>
-typename BPlus<K, T>::Node *(BPlus<K, T>::EndNode::Set)(K &key, T &value)
+typename BPlus<K, T>::Node *(BPlus<K, T>::EndNode::Add)(K &key, T &value)
 {
     if(Node::used_keys < (Node::max_degree - 1))
     {
@@ -47,12 +47,6 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::EndNode::Set)(K &key, T &value)
                 *tmp = &key;
 
                 return 0;                                               //every key is less, so the new is the last
-            }
-            else if(**tmp == key)
-            {
-                *slot = &value;
-
-                return 0;                                               //found the same key, replaced the value
             }
             else if(**tmp > key)
             {
@@ -121,12 +115,6 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::EndNode::Set)(K &key, T &value)
                     new_node->Node::used_keys = Node::max_degree - Node::used_keys;
 
                     return new_node;                                               //splited the node
-                }
-                else if(**tmp == key)
-                {
-                    *slot = &value;
-
-                    return 0;                                               //found the same key, replaced the value
                 }
                 else if(**tmp > key)
                 {
@@ -269,7 +257,7 @@ bool (BPlus<K, T>::EndNode::IsPresent)(const K &key) const
     }
 }
 
-template <typename K, typename T>
+/*template <typename K, typename T>
 bool BPlus<K, T>::EndNode::Remove(const K &key)
 {
     K **tmp = Node::keys;
@@ -310,6 +298,12 @@ M:  if(i == Node::used_keys)
         i++;
         goto M;
     }   
+}*/
+
+template <typename K, typename T>
+bool BPlus<K, T>::EndNode::PopFirst(K *&key, T *&value)
+{
+
 }
 
 template <typename K, typename T>

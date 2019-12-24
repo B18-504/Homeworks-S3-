@@ -61,11 +61,11 @@ void DictGet(void ***argv)
 }
 
 template <typename K, typename T>
-void DictSet(void ***argv)
+void DictAdd(void ***argv)
 {
     if(*(argv[0]))
     {
-        ((Dict<K, T>*)(*(argv[0])))->Set(*(K*)(argv[1]), *(T*)(argv[2]));
+        ((Dict<K, T>*)(*(argv[0])))->Add(*(K*)(argv[1]), *(T*)(argv[2]));
     }
     else
     {
@@ -73,7 +73,7 @@ void DictSet(void ***argv)
     }
 }
 
-template <typename K, typename T>
+/*template <typename K, typename T>
 void DictRemove(void ***argv)
 {
     if(*(argv[0]))
@@ -84,7 +84,7 @@ void DictRemove(void ***argv)
     {
         throw NPE();
     }
-}
+}*/
 
 template <typename K, typename T>
 void InputDict(void ***argv)

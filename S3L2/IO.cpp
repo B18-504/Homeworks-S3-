@@ -338,7 +338,7 @@ void Input(Dict<K, T> &a)
 	for(int i = 0; i < count; i++)
 	{
 		InputPair(keybuff, valbuff);
-		a.Set(keybuff, valbuff);
+		a.Add(keybuff, valbuff);
 	}
 }
 
@@ -354,6 +354,6 @@ void FInput(Dict<K, T> &a, FILE *file)
 	for(int i = 0; i < count; i++)
 	{
 		FInputPair(keybuff, valbuff, file);
-		a.Set(keybuff, valbuff);
+		a.Add(keybuff, valbuff);
 	}
 }

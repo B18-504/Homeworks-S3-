@@ -14,9 +14,10 @@ private:
         K **keys;
 
         virtual T &Get(const K&) const = 0;
+        virtual bool PopFirst(K *&, T *&) = 0;
         virtual bool IsPresent(const K&) const = 0;
-        virtual Node *Set(K&, T&) = 0;
-        virtual bool Remove(const K&) = 0;
+        virtual Node *Add(K&, T&) = 0;
+        //virtual bool Remove(const K&) = 0;
         virtual K &GetLeastKey() const = 0;
 
         virtual Node *StartIterator() const = 0;
@@ -32,9 +33,10 @@ private:
         InterNode *left, *right;
 
         T &Get(const K&) const override;
+        bool PopFirst(K *&, T *&) override;
         bool IsPresent(const K&) const override;
-        Node *Set(K&, T&) override;
-        bool Remove(const K&) override;
+        Node *Add(K&, T&) override;
+        //bool Remove(const K&) override;
         K &GetLeastKey() const override;
 
         Node *StartIterator() const override;
@@ -57,9 +59,10 @@ private:
         EndNode *left, *right;
 
         T &Get(const K&) const override;
+        bool PopFirst(K *&, T *&) override;
         bool IsPresent(const K&) const override;
-        Node *Set(K&, T&) override;
-        bool Remove(const K&) override;
+        Node *Add(K&, T&) override;
+        //bool Remove(const K&) override;
         K &GetLeastKey() const override;
 
         Node *StartIterator() const override;
@@ -74,14 +77,6 @@ private:
         EndNode(int max_degree);
         ~EndNode();
     };
-
-
-    int max_degree;
-    Node *head;
-
-    int count;
-
-    Node *StartIterator() const;
 
 public:
     class Iterator
@@ -104,15 +99,27 @@ public:
         void ShiftLeft();
     };
 
+private:
+    int max_degree;
+    Node *head;
+    EndNode *first;
+
+    int count;
+
+    Node *StartIterator() const;
+
+public:
+
 
     BPlus() = delete;
     BPlus(int max_degree);
 
     T &Get(const K&) const;
+    void PopFirst(K *&, T *&);
     bool IsPresent(const K&) const;
     int GetCount() const;
-    void Set(const K&, const T&);
-    void Remove(const K&);
+    void Add(const K&, const T&);
+    //void Remove(const K&);
 
     ~BPlus();
 };
