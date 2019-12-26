@@ -234,6 +234,23 @@ T &(BPlus<K, T>::EndNode::Get)(const K &key) const
 }
 
 template <typename K, typename T>
+bool BPlus<K, T>::EndNode::PopFirst(K *&key, T *&value)
+{
+    key = Node::keys[0];
+    value = values[0];
+
+    for(int i = 0; (i < Node::used_keys-1); i++)
+    {
+        Node::keys[i] = Node::keys[i+1];
+        values[i] = values[i+1];
+    }
+
+    Node::used_keys--;
+
+    return(Node::used_keys < (Node::max_degree - 1)/2);
+}
+
+template <typename K, typename T>
 bool (BPlus<K, T>::EndNode::IsPresent)(const K &key) const
 {
     int i = 0;
@@ -299,12 +316,6 @@ M:  if(i == Node::used_keys)
         goto M;
     }   
 }*/
-
-template <typename K, typename T>
-bool BPlus<K, T>::EndNode::PopFirst(K *&key, T *&value)
-{
-
-}
 
 template <typename K, typename T>
 K &(BPlus<K, T>::EndNode::GetLeastKey)() const
@@ -391,4 +402,61 @@ template <typename K, typename T>
 K &(BPlus<K, T>::EndNode::GetKey)(int pos) const
 {
     return(*(Node::keys[pos]));
+}
+
+template <typename K, typename T>
+K &(BPlus<K, T>::EndNode::ShareKeyRight)()
+{
+    K *result = Node::keys[1];
+    for(int i = 0; i < (Node::used_keys - 1); i++)
+    {
+        Node::keys[i] = Node::keys[i+1];
+    }
+    Node::used_keys--;
+
+    return *result;
+}
+
+template <typename K, typename T>
+void *(BPlus<K, T>::EndNode::ShareValRight)()
+{
+    void *result = values[0];
+    for(int i = 0; i < (Node::used_keys - 1); i++)
+    {
+        values[i] = values[i+1];
+    }
+
+    return result;
+}
+
+template <typename K, typename T>
+void BPlus<K, T>::EndNode::TakeValRight(void *value)
+{
+    values[Node::used_keys] = value;
+}
+
+template <typename K, typename T>
+bool BPlus<K, T>::EndNode::RootToBeRemoved() const
+{
+    return 0;
+}
+
+template <typename K, typename T>
+void BPlus<K, T>::EndNode::Absorb(Node *next)
+{
+    for(int i = Node::used_keys; i < (Node::used_keys + next->used_keys); i++)
+    {
+        Node::keys[i] = next->keys[i-Node::used_keys];
+        values[i] = ((EndNode*)next)->values[i-Node::used_keys];
+    }
+
+    Node::used_keys += next->used_keys;
+
+    right = right->right;                           //next is purposed to be same as right, it does no sence, if it is not so
+    right->left = this;
+
+    ((EndNode*)next)->right = 0;
+    ((EndNode*)next)->left = 0;
+    next->used_keys = 0;
+    delete next;
 }

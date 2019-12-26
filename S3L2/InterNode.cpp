@@ -48,6 +48,46 @@ T &(BPlus<K, T>::InterNode::Get)(const K &key) const
 }
 
 template <typename K, typename T>
+bool BPlus<K, T>::InterNode::PopFirst(K *&key, T *&value)
+{
+    if(Node::used_keys)
+    {
+        bool element_requested = nodes[0]->PopFirst(key, value);
+        if(element_requested)
+        {
+            if(nodes[1]->Node::used_keys > (Node::max_degree - 1)/2)
+            {
+                nodes[0]->TakeValRight(nodes[1]->ShareValRight());
+                nodes[0]->TakeKeyRight(*(Node::keys[0]));
+                Node::keys[0] = &(nodes[1]->ShareKeyRight());
+
+                return 0;
+            }
+            else
+            {
+                nodes[0]->Absorb(nodes[1]);
+                
+                for(int i = 1; i < (Node::used_keys - 1); i++)
+                {
+                    Node::keys[i] = Node::keys[i+1];
+                    nodes[i] = nodes[i+1];
+                }
+                nodes[Node::used_keys - 1] = nodes[Node::used_keys];
+                Node::used_keys--;
+            }
+        }
+        else
+        {
+            return 0;
+        }  
+    }
+    else
+    {
+        throw CIE();
+    }
+}
+
+template <typename K, typename T>
 bool BPlus<K, T>::InterNode::IsPresent(const K& key) const
 {
     K **tmp = Node::keys;
@@ -233,12 +273,6 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::Add)(K &key, T &value)
 }
 
 template <typename K, typename T>
-bool BPlus<K, T>::InterNode::PopFirst(K *&key, T *&value)
-{
-    
-}
-
-template <typename K, typename T>
 K &(BPlus<K, T>::InterNode::GetLeastKey)() const
 {
     if(Node::used_keys)
@@ -262,4 +296,60 @@ typename BPlus<K, T>::Node *(BPlus<K, T>::InterNode::StartIterator)() const
     {
         throw CIE();
     }
+}
+
+template <typename K, typename T>
+K &(BPlus<K, T>::InterNode::ShareKeyRight)()
+{
+    K *result = Node::keys[0];
+    for(int i = 0; i < (Node::used_keys - 1); i++)
+    {
+        Node::keys[i] = Node::keys[i+1];
+    }
+    Node::used_keys--;
+
+    return *result;
+}
+
+template <typename K, typename T>
+void *(BPlus<K, T>::InterNode::ShareValRight)()
+{
+    void *result = nodes[0];
+    for(int i = 0; i < (Node::used_keys); i++)
+    {
+        nodes[i] = nodes[i+1];
+    }
+
+    return result;
+}
+
+template <typename K, typename T>
+void BPlus<K, T>::InterNode::TakeValRight(void* node_ptr)
+{
+    nodes[Node::used_keys + 1] = node_ptr;
+}
+
+template <typename K, typename T>
+bool BPlus<K, T>::InterNode::RootToBeRemoved() const
+{
+    return(Node::used_keys == 0);
+}
+
+template <typename K, typename T>
+void BPlus<K, T>::InterNode::Absorb(Node *next)
+{
+    nodes[Node::used_keys+1] = ((InterNode*)next)->nodes[0];
+    Node::keys[Node::used_keys] = &(nodes[Node::used_keys+1]->GetLeastKey());       //to be replaced
+    Node::used_keys++;
+
+    for(int i = Node::used_keys; i < (Node::used_keys + next->used_keys); i++)
+    {
+        Node::keys[i] = next->keys[i-Node::used_keys];
+        nodes[i+1] = ((InterNode*)next)->nodes[i+1-Node::used_keys];
+    }
+
+    Node::used_keys += next->used_keys;
+    
+    next->used_keys = 0;
+    delete next;
 }

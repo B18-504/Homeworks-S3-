@@ -34,6 +34,29 @@ T &(BPlus<K, T>::Get)(const K &key) const
 }
 
 template <typename K, typename T>
+void BPlus<K, T>::PopFirst(K *&key, T *&value)
+{
+    if(count)
+    {
+        head->PopFirst(key, value);
+        count--;
+
+        if(head->RootToBeRemoved())
+        {
+            Node *new_head = ((InterNode*)head)->nodes[0];
+            ((InterNode*)head)->nodes[0] = 0;
+
+            delete head;
+            head = new_head;
+        }
+    }
+    else
+    {
+        throw CIE();
+    }
+}
+
+template <typename K, typename T>
 bool (BPlus<K, T>::IsPresent)(const K &key) const
 {
     return head->IsPresent(key);
@@ -72,4 +95,11 @@ template <typename K, typename T>
 typename BPlus<K, T>::Node *(BPlus<K, T>::StartIterator)() const
 {
     return head->StartIterator();
+}
+
+template <typename K, typename T>
+void BPlus<K, T>::Node::TakeKeyRight(K &key)
+{
+    Node::keys[Node::used_keys] = &key;
+    Node::used_keys++;
 }

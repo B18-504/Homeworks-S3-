@@ -22,6 +22,14 @@ private:
 
         virtual Node *StartIterator() const = 0;
 
+        virtual void *ShareValRight() = 0;
+        virtual K &ShareKeyRight() = 0;
+        virtual void TakeValRight(void*) = 0;
+        void TakeKeyRight(K&);
+        virtual void Absorb(Node*) = 0;
+
+        virtual bool RootToBeRemoved() const = 0;
+
         virtual ~Node() = default;
     };
 
@@ -40,6 +48,13 @@ private:
         K &GetLeastKey() const override;
 
         Node *StartIterator() const override;
+
+        K &ShareKeyRight() override;
+        void *ShareValRight() override;
+        void TakeValRight(void*) override;
+        void Absorb(Node*) override;
+
+        bool RootToBeRemoved() const override;
 
         InterNode() = delete;
         InterNode(int max_degree);
@@ -72,6 +87,13 @@ private:
         bool HasNext(int) const;
         bool HasPrev(int) const;
         K &GetKey(int) const;
+
+        K &ShareKeyRight() override;
+        void *ShareValRight() override;
+        void TakeValRight(void*) override;
+        void Absorb(Node*) override;
+
+        bool RootToBeRemoved() const override;
 
         EndNode() = delete;
         EndNode(int max_degree);
