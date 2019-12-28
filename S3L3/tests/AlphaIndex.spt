@@ -1,0 +1,20 @@
+create Dict<str:int> d
+create int i
+create file f
+
+Input i
+StartBPlusDict d i
+
+Input i
+StartInFile f lol.txt
+
+AlphaIndex d i f
+
+Print d
+
+StopFile f
+del d
+del i
+del f
+
+exit

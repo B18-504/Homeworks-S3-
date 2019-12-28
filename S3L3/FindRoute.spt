@@ -1,0 +1,26 @@
+create int source
+create int dest
+create int starttime
+
+Print from:
+Input source
+
+Print to:
+Input dest
+
+Print start:
+Input starttime
+
+create Route r
+
+GetRoute TG r source dest starttime
+
+NewLine
+Print r
+NewLine
+
+del r
+del source
+del dest
+
+exit
